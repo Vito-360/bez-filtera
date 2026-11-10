@@ -10,6 +10,6 @@ jobs:
     steps:
       - name: Ping
         run: |
-          curl -sf -X POST "https://gxjzjipwrxzjibzlakgq.supabase.co/rest/v1/rpc/ping" \
+          curl -sf -X POST "https://gxjziipwrxzjibzlakgq.supabase.co/rest/v1/rpc/ping" \
             -H "apikey: sb_publishable_4eocLcYh6eKvRrGqTChA1Q_aw6XztH_" \
             -H "Content-Type: application/json" -d '{}'
