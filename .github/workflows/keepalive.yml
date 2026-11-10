@@ -1,0 +1,15 @@
+# Budi Supabase bazu svaka 3 dana da se besplatni projekt ne pauzira.
+name: Budi bazu
+on:
+  schedule:
+    - cron: "17 6 */3 * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping
+        run: |
+          curl -sf -X POST "https://gxjzjipwrxzjibzlakgq.supabase.co/rest/v1/rpc/ping" \
+            -H "apikey: sb_publishable_4eocLcYh6eKvRrGqTChA1Q_aw6XztH_" \
+            -H "Content-Type: application/json" -d '{}'
