@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0D0B14">
 <title>Bez filtera</title>
-<link rel="preload" as="image" href="ormaric.webp">
+<link rel="preload" as="image" href="ormaric.webp" media="(max-aspect-ratio:3/4)"><link rel="preload" as="image" href="ormaric-siroko.webp" media="(min-aspect-ratio:3/4)">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -52,7 +52,6 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 .splash{position:fixed;inset:0;z-index:80;overflow:hidden;background:var(--bg);margin:0;padding:0;border:0;border-radius:0;box-shadow:none;min-height:0;width:auto;cursor:pointer;display:block}
 .splash:active:not(:disabled){transform:none;box-shadow:none}
 .cab{position:absolute;left:50%;top:50%;width:max(100vw,calc(100vh * 572 / 1024));width:max(100vw,calc(100dvh * 572 / 1024));aspect-ratio:572/1024;transform:translate(-50%,-50%);container-type:inline-size;transform-origin:50.2% 42.3%}
-@media (min-aspect-ratio:3/4){.cab{width:calc(100vh * 572 / 1024);width:calc(100dvh * 572 / 1024)}}
 .splash .bgblur{position:absolute;inset:-60px;background:url(ormaric.webp) center/cover no-repeat;filter:blur(30px) brightness(.55) saturate(1.4)}
 .cab img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .cab .scr{position:absolute;left:31.1%;top:33.7%;width:38.1%;height:17.3%;display:flex;align-items:center;justify-content:center;text-align:center;font:19px/1.6 var(--pixel);font-size:4.2cqw;color:var(--yellow);text-shadow:0 0 6px currentColor,0 0 16px currentColor;animation:press 1.5s steps(1) infinite}
@@ -179,6 +178,7 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 .champ .nm{font:24px/1.4 var(--pixel);color:var(--yellow);margin-top:10px;text-shadow:0 0 6px currentColor,0 0 18px currentColor}
 .champ .pts{font:28px var(--crt);margin-top:8px;color:var(--text)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (min-aspect-ratio:3/4){.splash .bgblur{display:none}.cab{aspect-ratio:2576/1438;width:max(100vw,calc(100vh * 2576 / 1438));width:max(100vw,calc(100dvh * 2576 / 1438));transform-origin:50.1% 42.6%}.cab .scr{left:44.1%;top:34.1%;width:12%;height:17%;font-size:1.33cqw}.cab .mq{left:42.2%;top:19%;width:15.4%;height:6.5%;font-size:1.25cqw}}
 </style>
 </head>
 <body>
@@ -337,7 +337,7 @@ function go(v){ view = v; lastKey = ""; render(); }
 // ---- Ulazni ekran ----
 function splashHTML(){
   return `<button class="splash scan" id="splash" aria-label="Pokreni igru Bez filtera">
-    <div class="bgblur" aria-hidden="true"></div><div class="cab"><img src="ormaric.webp" alt="Stari arkadni automat u mračnoj igraonici s neonskim svjetlima" decoding="async" onerror="this.style.visibility='hidden'">
+    <div class="bgblur" aria-hidden="true"></div><div class="cab"><picture><source media="(min-aspect-ratio:3/4)" srcset="ormaric-siroko.webp"><img src="ormaric.webp" alt="Stari arkadni automat u mračnoj igraonici s neonskim svjetlima" decoding="async" onerror="this.style.visibility='hidden'"></picture>
       <div class="mq" aria-hidden="true">BEZ FILTERA</div>
       <div class="scr" aria-hidden="true"><span>PRESS<br>TO PLAY</span></div></div>
     <div class="flash"></div></button>`;
