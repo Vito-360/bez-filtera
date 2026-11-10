@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>Bez filtera</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#111;--panel:#1c1c1e;--line:#2c2c2e;--text:#f5f5f5;--muted:#9a9aa0;--acc:#ffd60a;--good:#30d158;--bad:#ff453a;--black:#000;--white:#fff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.app{max-width:520px;margin:0 auto;padding:14px 14px 120px;min-height:100vh}
+h1{font-size:40px;font-weight:800;margin:40px 0 4px;letter-spacing:-1px}
+h2{font-size:20px;margin:22px 0 10px}
+.muted{color:var(--muted)}
+input{width:100%;height:54px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:600 18px Inter,sans-serif;padding:0 16px;margin:6px 0}
+input:focus{outline:2px solid var(--acc);border-color:transparent}
+.code-input{text-transform:uppercase;letter-spacing:6px;text-align:center;font-size:24px}
+button{font:700 17px Inter,sans-serif;border:0;border-radius:12px;min-height:54px;padding:0 18px;cursor:pointer;width:100%;margin:6px 0}
+.primary{background:var(--acc);color:#000}
+.secondary{background:var(--panel);color:var(--text);border:1px solid var(--line)}
+.danger{background:transparent;color:var(--bad);border:1px solid #4a1f1c}
+button:disabled{opacity:.35}
+button:active:not(:disabled){transform:scale(.98)}
+.or{text-align:center;color:var(--muted);margin:18px 0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.pill{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:700;font-size:15px;white-space:nowrap}
+.pill.timer.low{color:var(--bad);border-color:var(--bad)}
+.iconbtn{width:auto;min-height:40px;height:40px;padding:0 14px;margin:0;font-size:14px;border-radius:999px}
+.bigcode{font-size:56px;font-weight:800;letter-spacing:10px;text-align:center;margin:10px 0 0}
+.card{border-radius:16px;padding:18px;font-weight:700;line-height:1.3}
+.card.black{background:var(--black);color:#fff;border:1px solid #333;font-size:22px;min-height:150px;margin-bottom:14px}
+.blank{display:inline-block;min-width:70px;border-bottom:3px solid var(--acc);margin:0 2px}
+.fill{color:var(--acc)}
+.pick2{display:inline-block;margin-top:12px;font-size:13px;background:var(--acc);color:#000;border-radius:999px;padding:3px 10px}
+.hand{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card.white{background:var(--white);color:#111;font-size:17px;min-height:110px;cursor:pointer;position:relative;border:3px solid transparent}
+.card.white.sel{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,214,10,.35)}
+.card.white .num{position:absolute;top:-10px;left:-10px;background:var(--acc);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
+.card.white.custom{background:#fff8d6}
+.card.white.mine{opacity:.5;cursor:default}
+.answers{display:flex;flex-direction:column;gap:10px}
+.answers .card.white{min-height:auto}
+.answers .card.white.win{border-color:var(--good)}
+.meta{display:flex;justify-content:space-between;margin-top:10px;font-size:14px;color:#555;font-weight:600}
+.players{display:flex;flex-direction:column;gap:6px}
+.prow{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border-radius:10px;padding:12px 14px;font-weight:600}
+.prow.away{opacity:.45}
+.tag{font-size:12px;color:var(--muted);margin-left:6px;font-weight:600}
+.ok{color:var(--good)}
+.toggle{display:flex;align-items:center;justify-content:space-between;background:var(--panel);border-radius:12px;padding:14px;margin:6px 0;font-weight:600}
+.toggle input{width:26px;height:26px;margin:0;accent-color:var(--acc)}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 25%)}
+.bar .inner{max-width:520px;margin:0 auto}
+.note{background:var(--panel);border-radius:12px;padding:14px;margin:10px 0;color:var(--muted);font-weight:600;text-align:center}
+.toast{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:var(--bad);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;z-index:50;max-width:90%;text-align:center}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;z-index:40}
+.sheet{background:var(--panel);width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet h3{margin:0 0 6px}
+.footer{color:#555;font-size:12px;text-align:center;margin-top:30px}
+.footer a{color:#777}
+.winner-big{text-align:center;font-size:28px;font-weight:800;margin:20px 0}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div id="overlay"></div>
+<script>
+const SUPABASE_URL = "https://gxjzjipwrxzjibzlakgq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_4eocLcYh6eKvRrGqTChA1Q_aw6XztH_";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const ERR = {
+  NEMA_SOBE:"Soba s tim kodom ne postoji.", NEMA_IGRACA:"Više nisi u sobi.", IME_ZAUZETO:"To ime je već u sobi. Uzmi drugo.",
+  IME_PRAZNO:"Upiši ime.", SOBA_PUNA:"Soba je puna (20 igrača).", PREMALO_IGRACA:"Treba barem 3 igrača.",
+  SAMO_HOST:"To može samo host.", IGRA_TRAJE:"Igra je već u tijeku.", NIJE_VRIJEME:"Prekasno, runda je otišla dalje.",
+  CEKAS_RUNDU:"Uključuješ se od sljedeće runde.", VEC_BACENO:"Već si bacio.", KRIVI_BROJ:"Odaberi točan broj karata.",
+  NIJE_TVOJA_KARTA:"Ta karta više nije u tvojoj ruci.", NE_ZA_SEBE:"Ne možeš glasati za sebe.", VEC_DODANO:"Već si dodao odgovor u ovoj igri.",
+  PREKRATKO:"Odgovor je prekratak.", PREDUGO:"Najviše 80 znakova."
+};
+const ls = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}, del(k){try{localStorage.removeItem(k)}catch(e){}} };
+
+let token = ls.get("bf_token"), S = null, offset = 0, sel = [], voteSel = null, channel = null, channelCode = null, busy = false, lastKey = "";
+let wakeOn = ls.get("bf_wake") === "1", wakeLock = null;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function toast(msg){ const d=document.createElement("div"); d.className="toast"; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(),3000); }
+function errMsg(e){ const m = (e && (e.message||e.details)) || String(e); for (const k in ERR) if (m.includes(k)) return ERR[k]; return "Nešto nije uspjelo. Provjeri internet i pokušaj opet."; }
+
+async function call(fn, args){
+  const { data, error } = await sb.rpc(fn, args);
+  if (error) throw error;
+  return data;
+}
+async function act(fn, args, after){
+  if (busy) return; busy = true;
+  try { const d = await call(fn, args); if (after) after(d); ping(); await refresh(); }
+  catch(e){ toast(errMsg(e)); await refresh(); }
+  finally { busy = false; }
+}
+
+// ---- Realtime: kad netko nešto napravi, svi odmah osvježe; uz to i provjera svake 2 s ----
+function ensureChannel(code){
+  if (channelCode === code) return;
+  if (channel) sb.removeChannel(channel);
+  channelCode = code;
+  channel = sb.channel("soba-" + code).on("broadcast", { event: "refresh" }, () => refresh()).subscribe();
+}
+function ping(){ try { channel && channel.send({ type:"broadcast", event:"refresh", payload:{} }); } catch(e){} }
+
+async function refresh(){
+  if (!token) { S = null; render(); return; }
+  try {
+    const d = await call("get_state", { p_token: token });
+    if (d && d.error === "NEMA_IGRACA") { ls.del("bf_token"); token = null; S = null; render(); return; }
+    offset = new Date(d.server_now).getTime() - Date.now();
+    const prev = S; S = d;
+    if (!prev || prev.room.round !== S.room.round || prev.room.phase !== S.room.phase) { sel = []; voteSel = null; }
+    sel = sel.filter(id => S.me.hand.some(h => h.id === id));
+    ensureChannel(S.room.code);
+    render();
+  } catch(e){ /* mreža: probaj opet za 2 s */ }
+}
+setInterval(refresh, 2000);
+setInterval(tickTimer, 250);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { refresh(); if (wakeOn) lockWake(); } });
+
+// ---- Ekran uvijek upaljen ----
+async function lockWake(){ try { if ("wakeLock" in navigator) { wakeLock = await navigator.wakeLock.request("screen"); } } catch(e){} }
+async function toggleWake(){
+  wakeOn = !wakeOn; ls.set("bf_wake", wakeOn ? "1" : "0");
+  if (wakeOn) { await lockWake(); if (!("wakeLock" in navigator)) toast("Tvoj preglednik ovo ne podržava."); }
+  else if (wakeLock) { try { await wakeLock.release(); } catch(e){} wakeLock = null; }
+  lastKey = ""; render();
+}
+if (wakeOn) lockWake();
+
+function secondsLeft(){ if (!S || !S.room.ends_at) return null; return Math.max(0, Math.ceil((new Date(S.room.ends_at).getTime() - (Date.now() + offset)) / 1000)); }
+function tickTimer(){ const el = $("#timer"); if (!el) return; const s = secondsLeft(); if (s === null) return; el.textContent = "⏱ " + s; el.classList.toggle("low", s <= 10); if (s === 0) refresh(); }
+
+function blackHTML(text, fills){
+  let i = 0;
+  const parts = esc(text).split("___");
+  return parts.map((p, k) => k === 0 ? p : (fills && fills[i] !== undefined ? `<span class="fill">${esc(String(fills[i++]).replace(/\.$/, ""))}</span>` : `<span class="blank"></span>`) + p).join("");
+}
+
+// ---- Prikaz ----
+function render(){
+  const key = JSON.stringify([S, sel, voteSel, wakeOn]);
+  if (key === lastKey) return; lastKey = key;
+  const app = $("#app");
+  if (!S) { app.innerHTML = homeHTML(); bindHome(); return; }
+  const r = S.room, me = S.me;
+  let h = `<div class="top"><span class="pill">${esc(r.code)}</span>${r.ends_at && ["playing","voting","results"].includes(r.phase) ? `<span class="pill timer" id="timer">⏱ ${secondsLeft() ?? ""}</span>` : ""}<button class="secondary iconbtn" id="menuBtn">Izbornik</button></div>`;
+  if (r.phase === "lobby") h += lobbyHTML();
+  else if (r.phase === "ended") h += endedHTML();
+  else if (me.waiting) h += waitingHTML();
+  else if (r.phase === "playing") h += playingHTML();
+  else if (r.phase === "voting") h += votingHTML();
+  else if (r.phase === "results") h += resultsHTML();
+  h += `<div class="footer">Paket Klasici prema <a href="https://www.cardsagainsthumanity.com/" target="_blank" rel="noopener">Cards Against Humanity</a>, licenca <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank" rel="noopener">CC BY-NC-SA 2.0</a>.</div>`;
+  app.innerHTML = h;
+  bindGame();
+}
+
+function homeHTML(){
+  const params = new URLSearchParams(location.search);
+  const k = (params.get("k") || "").toUpperCase();
+  return `<h1>Bez filtera</h1><p class="muted">Kartaška igra za ekipu. Svatko na svom mobitelu.</p>
+  <input id="name" placeholder="Tvoje ime" maxlength="20" value="${esc(ls.get("bf_name") || "")}" autocomplete="nickname">
+  ${k ? "" : `<button class="primary" id="createBtn">Napravi sobu</button><div class="or">ili uđi u postojeću</div>`}
+  <input id="code" class="code-input" placeholder="KOD" maxlength="4" value="${esc(k)}" autocomplete="off">
+  <button class="${k ? "primary" : "secondary"}" id="joinBtn">Uđi u sobu</button>
+  ${k ? `<div class="or"><a href="${location.pathname}" style="color:var(--muted)">ili napravi novu sobu</a></div>` : ""}`;
+}
+function bindHome(){
+  const nm = () => { const v = $("#name").value.trim(); if (!v) { toast(ERR.IME_PRAZNO); return null; } ls.set("bf_name", v); return v; };
+  const done = d => { token = d.token; ls.set("bf_token", token); history.replaceState(null, "", location.pathname); };
+  $("#createBtn") && ($("#createBtn").onclick = () => { const n = nm(); if (n) act("create_room", { p_name: n }, done); });
+  $("#joinBtn").onclick = () => { const n = nm(); const c = $("#code").value.trim().toUpperCase(); if (!n) return; if (c.length !== 4) { toast("Kod ima 4 slova."); return; } act("join_room", { p_code: c, p_name: n }, done); };
+}
+
+function playersHTML(showDone){
+  return `<div class="players">${S.players.map(p => `<div class="prow ${p.present ? "" : "away"}"><span>${esc(p.name)}${p.host ? '<span class="tag">host</span>' : ""}${p.waiting ? '<span class="tag">od sljedeće runde</span>' : ""}${!p.present ? '<span class="tag">nije tu</span>' : ""}</span><span>${showDone && p.done ? '<span class="ok">✓</span> ' : ""}${p.score}</span></div>`).join("")}</div>`;
+}
+
+function lobbyHTML(){
+  const r = S.room, me = S.me, n = S.players.filter(p => p.present).length;
+  const link = location.origin + location.pathname + "?k=" + r.code;
+  return `<p class="muted" style="text-align:center;margin:0">Kod sobe</p><div class="bigcode">${esc(r.code)}</div>
+  <button class="secondary" id="shareBtn" data-link="${esc(link)}">Kopiraj poveznicu za ekipu</button>
+  <h2>Igrači (${S.players.length})</h2>${playersHTML(false)}
+  ${me.is_host ? `<h2>Paketi</h2>
+    <label class="toggle">Pristojno <input type="checkbox" checked disabled></label>
+    <label class="toggle">18+ <input type="checkbox" id="p18" ${r.include_18 ? "checked" : ""}></label>
+    <label class="toggle">Klasici <input type="checkbox" id="pkl" ${r.include_klasici ? "checked" : ""}></label>`
+  : `<div class="note">Paketi: Pristojno${r.include_18 ? " + 18+" : ""}${r.include_klasici ? " + Klasici" : ""}. Čekamo da host krene.</div>`}
+  ${me.can_add ? `<button class="secondary" id="addBtn">＋ Dodaj svoj odgovor</button>` : `<div class="note">Tvoj odgovor je dodan ✓</div>`}
+  ${me.is_host ? `<div class="bar"><div class="inner"><button class="primary" id="startBtn" ${n < r.min_players ? "disabled" : ""}>${n < r.min_players ? `Treba još ${r.min_players - n}` : "Kreni"}</button></div></div>` : ""}`;
+}
+
+function playingHTML(){
+  const r = S.room, me = S.me;
+  if (me.submitted) {
+    const left = S.players.filter(p => !p.done && !p.waiting && p.present).map(p => esc(p.name));
+    return `<div class="card black">${blackHTML(r.black)}</div><div class="note">Bacio si ✓ ${left.length ? "Čekamo: " + left.join(", ") : ""}</div>${playersHTML(true)}${addHTML()}`;
+  }
+  const need = r.pick;
+  return `<div class="card black">${blackHTML(r.black)}${need > 1 ? `<div><span class="pick2">Izvuci ${need}</span></div>` : ""}</div>
+  <div class="hand">${me.hand.map(c => { const i = sel.indexOf(c.id); return `<div class="card white ${i >= 0 ? "sel" : ""} ${c.custom ? "custom" : ""}" data-card="${c.id}">${i >= 0 && need > 1 ? `<span class="num">${i + 1}</span>` : ""}${esc(c.text)}</div>`; }).join("")}</div>
+  ${addHTML()}
+  <div class="bar"><div class="inner"><button class="primary" id="playBtn" ${sel.length !== need ? "disabled" : ""}>${sel.length === need ? "Baci" : need > 1 ? `Odaberi ${need} karte (${sel.length}/${need})` : "Odaberi kartu"}</button></div></div>`;
+}
+
+function votingHTML(){
+  const r = S.room, me = S.me;
+  const voted = me.voted_for;
+  return `<div class="card black">${blackHTML(r.black)}</div>
+  <p class="muted" style="margin:0 0 10px">${voted ? "Glasao si ✓ Čekamo ostale." : "Pročitajte naglas i glasajte za najbolji."}</p>
+  <div class="answers">${S.submissions.map(s => `<div class="card white ${s.mine ? "mine" : ""} ${(voteSel === s.id || voted === s.id) ? "sel" : ""}" data-sub="${s.mine || voted ? "" : s.id}">${s.texts.map(esc).join(" / ")}${s.mine ? '<div class="meta"><span>tvoj odgovor</span></div>' : ""}</div>`).join("")}</div>
+  ${voted ? "" : `<div class="bar"><div class="inner"><button class="primary" id="voteBtn" ${voteSel ? "" : "disabled"}>${voteSel ? "Glasaj" : "Odaberi najbolji"}</button></div></div>`}`;
+}
+
+function resultsHTML(){
+  const r = S.room;
+  const subs = [...S.submissions].sort((a, b) => b.votes - a.votes);
+  const win = subs.filter(s => s.winner);
+  return `<div class="card black">${blackHTML(r.black, win[0] ? win[0].texts : null)}</div>
+  <div class="winner-big">${win.length ? "🏆 " + win.map(w => esc(w.player)).join(" i ") : "Nitko nije dobio glas"}</div>
+  <div class="answers">${subs.map(s => `<div class="card white ${s.winner ? "win" : ""}">${s.texts.map(esc).join(" / ")}<div class="meta"><span>${esc(s.player)}${s.auto ? " (bacio sustav)" : ""}</span><span>${s.votes} ${s.votes === 1 ? "glas" : (s.votes >= 2 && s.votes <= 4 ? "glasa" : "glasova")}</span></div></div>`).join("")}</div>
+  <h2>Bodovi</h2>${playersHTML(false)}`;
+}
+
+function waitingHTML(){
+  return `<div class="card black">${blackHTML(S.room.black || "Igra je u tijeku.")}</div><div class="note">Ušao si usred runde. Uključuješ se od sljedeće, karte već imaš.</div>${playersHTML(false)}${addHTML()}`;
+}
+
+function endedHTML(){
+  const top = S.players[0];
+  return `<div class="winner-big">🏆 ${top ? esc(top.name) : ""}</div><h2>Konačni poredak</h2>${playersHTML(false)}
+  ${S.me.is_host ? `<div class="bar"><div class="inner"><button class="primary" id="startBtn">Nova igra</button></div></div>` : `<div class="note">Host može pokrenuti novu igru.</div>`}`;
+}
+
+function addHTML(){ return S.me.can_add ? `<button class="secondary" id="addBtn" style="margin-top:14px">＋ Dodaj svoj odgovor</button>` : ""; }
+
+function bindGame(){
+  document.querySelectorAll("[data-card]").forEach(el => el.onclick = () => {
+    const id = Number(el.dataset.card), need = S.room.pick;
+    if (sel.includes(id)) sel = sel.filter(x => x !== id);
+    else if (need === 1) sel = [id];
+    else if (sel.length < need) sel = [...sel, id];
+    render();
+  });
+  document.querySelectorAll("[data-sub]").forEach(el => el.onclick = () => { if (!el.dataset.sub) return; voteSel = el.dataset.sub; render(); });
+  const b = id => document.getElementById(id);
+  b("playBtn") && (b("playBtn").onclick = () => act("play_cards", { p_token: token, p_cards: sel }, () => { sel = []; }));
+  b("voteBtn") && (b("voteBtn").onclick = () => voteSel && act("vote", { p_token: token, p_submission: voteSel }));
+  b("startBtn") && (b("startBtn").onclick = () => act("start_game", { p_token: token }));
+  b("p18") && (b("p18").onchange = () => act("set_packs", { p_token: token, p_18: b("p18").checked, p_klasici: b("pkl").checked }));
+  b("pkl") && (b("pkl").onchange = () => act("set_packs", { p_token: token, p_18: b("p18").checked, p_klasici: b("pkl").checked }));
+  b("addBtn") && (b("addBtn").onclick = openAdd);
+  b("menuBtn") && (b("menuBtn").onclick = openMenu);
+  b("shareBtn") && (b("shareBtn").onclick = async () => { try { await navigator.clipboard.writeText(b("shareBtn").dataset.link); toast("Poveznica kopirana. Pošalji je ekipi."); } catch(e) { toast(b("shareBtn").dataset.link); } });
+}
+
+function sheet(html, bind){
+  $("#overlay").innerHTML = `<div class="modal" id="modal"><div class="sheet">${html}</div></div>`;
+  $("#modal").onclick = e => { if (e.target.id === "modal") closeSheet(); };
+  bind && bind();
+}
+function closeSheet(){ $("#overlay").innerHTML = ""; }
+
+function openAdd(){
+  sheet(`<h3>Dodaj svoj odgovor</h3><p class="muted" style="margin:0 0 8px">Jedan po igri. Dobit će ga netko drugi u sljedećih par izvlačenja i nitko neće znati da je tvoj. Ostaje samo u ovoj sobi.</p>
+  <input id="addText" maxlength="80" placeholder="npr. Šime kad popije treće pivo">
+  <button class="primary" id="addOk">Dodaj</button><button class="secondary" id="addNo">Odustani</button>`, () => {
+    $("#addText").focus();
+    $("#addNo").onclick = closeSheet;
+    $("#addOk").onclick = () => { const t = $("#addText").value.trim(); if (t.length < 2) { toast(ERR.PREKRATKO); return; } closeSheet(); act("add_answer", { p_token: token, p_text: t }, () => toast2("Odgovor dodan ✓")); };
+  });
+}
+function toast2(m){ const d=document.createElement("div"); d.className="toast"; d.style.background="var(--good)"; d.style.color="#000"; d.textContent=m; document.body.appendChild(d); setTimeout(()=>d.remove(),2500); }
+
+function openMenu(){
+  const host = S.me.is_host, inGame = ["playing","voting","results"].includes(S.room.phase);
+  sheet(`<h3>${esc(S.me.name)} · soba ${esc(S.room.code)}</h3>
+  <label class="toggle">Ekran uvijek upaljen <input type="checkbox" id="wakeT" ${wakeOn ? "checked" : ""}></label>
+  ${host && inGame ? `<button class="secondary" id="endBtn">Završi igru i pokaži poredak</button>` : ""}
+  <button class="danger" id="leaveBtn">Izađi iz sobe</button>
+  <button class="secondary" id="closeBtn">Zatvori</button>`, () => {
+    $("#wakeT").onchange = toggleWake;
+    $("#closeBtn").onclick = closeSheet;
+    $("#endBtn") && ($("#endBtn").onclick = () => sheet(`<h3>Završiti igru?</h3><p class="muted">Svima se prikazuje konačni poredak.</p><button class="primary" id="y">Da, završi</button><button class="secondary" id="n">Ne</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = () => { closeSheet(); act("end_game", { p_token: token }); }; }));
+    $("#leaveBtn").onclick = () => sheet(`<h3>Izaći iz sobe?</h3><p class="muted">Bodovi ti se gube. Možeš ući ponovno s kodom.</p><button class="danger" id="y">Izađi</button><button class="secondary" id="n">Ostani</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = async () => { closeSheet(); try { await call("leave_room", { p_token: token }); ping(); } catch(e){} ls.del("bf_token"); token = null; S = null; lastKey = ""; render(); }; });
+  });
+}
+
+refresh();
+render();
+</script>
+</body>
+</html>
