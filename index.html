@@ -3,153 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1F2A5A">
+<meta name="theme-color" content="#0D0B14">
 <title>Bez filtera</title>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="ormaric.webp">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#EFE7DA;--surf:#E4DACA;--paper:#FFFDF8;--paper2:#F5EBD0;--ink:#1F1A17;--muted:#5C534A;--navy:#1F2A5A;--navytext:#F6F1E7;--red:#C2331C;--redp:#A32A16;--sel:#CFE0FF;--gold:#F2B705;--warn:#C2185B;--good:#F2B705;--line:#B9AE9E;--off:#D9D1C4;--offtext:#7A7166}
+:root{--bg:#0D0B14;--surf:#17141F;--line:#2C2738;--text:#F1EEFA;--muted:#A39CB5;--cyan:#7FF6FF;--pink:#FF3FA4;--onpink:#0D0B14;--yellow:#FFCF3F;--bcard:#1A1440;--wcard:#FFFDF8;--wtext:#1F1A17;--sel:#CFF9FF;--warn:#FF4F6D;--off:#2C2738;--offtext:#6F6784;--good:#FFCF3F;
+  --pixel:"Press Start 2P",ui-monospace,monospace;--crt:VT323,ui-monospace,monospace;--sans:Archivo,system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:500}
 body{padding:0 0 env(safe-area-inset-bottom)}
 .app{max-width:520px;margin:0 auto;padding:env(safe-area-inset-top) 14px 130px;min-height:100vh}
-.app.home{padding-top:calc(24px + env(safe-area-inset-top))}
+.app.home{padding-top:calc(28px + env(safe-area-inset-top))}
 .app.handmode{padding-bottom:480px}
 .muted{color:var(--muted)}
-h2{font:800 17px Archivo,sans-serif;margin:24px 0 10px}
+h2{font:13px/1.5 var(--pixel);color:var(--cyan);margin:28px 0 12px}
+.glow{text-shadow:0 0 6px currentColor,0 0 18px currentColor}
 
 /* ---- logo ---- */
-.logo{font-family:Fraunces,serif;font-weight:800;color:var(--navy);text-shadow:3px 3px 0 var(--red);line-height:.95;margin:0}
-.logo i{font-style:italic}
-.hero{position:relative;height:270px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
-.hero .deco{position:absolute;width:150px;aspect-ratio:63/88;border:2px solid var(--ink);border-radius:10px}
-.hero .d1{background:var(--navy);box-shadow:5px 5px 0 var(--red);transform:translateX(-52px) rotate(-9deg)}
-.hero .d2{background:var(--paper);box-shadow:4px 4px 0 var(--ink);transform:translateX(52px) rotate(7deg)}
-.hero h1{position:relative;font-size:56px;text-align:center;background:var(--bg);border:2px solid var(--ink);border-radius:10px;padding:14px 22px 18px}
-.hero h1 span{display:block}
-.tagline{text-align:center;font-size:17px;line-height:1.4;margin:0 0 22px}
+.logo{font-family:var(--pixel);color:var(--cyan);line-height:1.25;margin:0;text-align:center;text-shadow:0 0 6px currentColor,0 0 20px currentColor}
+.logo span{display:block}
+.home .logo{font-size:30px;margin:12px 0 14px}
+.tagline{text-align:center;font-size:17px;line-height:1.4;margin:0 0 24px}
 
 /* ---- polja i gumbi ---- */
-input{width:100%;height:56px;border-radius:8px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font:500 18px Archivo,sans-serif;padding:0 16px;margin:6px 0}
-input::placeholder{color:#8A8076}
-input:focus{outline:none;border:3px solid var(--navy);padding:0 15px}
-input:disabled{background:var(--surf);color:#8A8076}
-.code-input{font:800 26px Fraunces,serif;text-transform:uppercase;letter-spacing:.3em;text-align:center}
-button{font:800 20px Archivo,sans-serif;border:2px solid var(--ink);border-radius:8px;min-height:56px;padding:0 18px;cursor:pointer;width:100%;margin:8px 0;color:var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--ink);transition:transform .06s,box-shadow .06s,background .06s}
+input{width:100%;height:56px;border-radius:6px;border:2px solid var(--line);background:var(--surf);color:var(--text);font:500 18px var(--sans);padding:0 16px;margin:6px 0}
+input::placeholder{color:var(--offtext)}
+input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan)}
+.code-input{font:40px/1 var(--crt);text-transform:uppercase;letter-spacing:.35em;text-align:center;color:var(--yellow)}
+button{font:14px/1.5 var(--pixel);border:2px solid var(--line);border-radius:6px;min-height:56px;padding:8px 16px;cursor:pointer;width:100%;margin:10px 0;color:var(--text);background:var(--surf);box-shadow:3px 3px 0 var(--cyan);transition:transform .06s,box-shadow .06s}
 button:active:not(:disabled){transform:translate(3px,3px);box-shadow:none}
-.primary{background:var(--red);color:#fff}
-.primary:active:not(:disabled){background:var(--redp)}
-.secondary{background:var(--paper);color:var(--ink)}
-.danger{background:var(--paper);color:var(--warn);border-color:var(--warn);box-shadow:3px 3px 0 var(--warn)}
-button:disabled{background:var(--off);color:var(--offtext);border-color:var(--line);box-shadow:none;cursor:default}
+.primary{background:var(--pink);border-color:var(--pink);color:var(--onpink)}
+.secondary{background:var(--surf);color:var(--text)}
+.danger{background:var(--surf);color:var(--warn);border-color:var(--warn);box-shadow:3px 3px 0 var(--warn)}
+button:disabled{background:var(--off);border-color:var(--off);color:var(--offtext);box-shadow:none;cursor:default}
 .or{text-align:center;color:var(--muted);margin:18px 0;font-size:15px;display:flex;align-items:center;gap:12px}
 .or::before,.or::after{content:"";flex:1;border-top:2px dashed var(--line)}
-.or a{color:var(--navy);font-weight:700}
+.or a{color:var(--cyan)}
+.crtbtn{display:block;width:100%;min-height:48px;margin:6px 0;padding:4px 0;background:none;border:0;box-shadow:none;text-align:left;font:32px/1.15 var(--crt);color:var(--cyan)}
+.crtbtn:active:not(:disabled){transform:none;box-shadow:none;color:var(--yellow)}
+.crtbtn.soon{color:var(--offtext)}
+.crtbtn .tagsoon{font-size:22px;border:1px solid var(--offtext);padding:0 6px;margin-left:8px;vertical-align:3px}
+.cursor{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---- ulazni ekran ---- */
+.splash{position:fixed;inset:0;z-index:80;overflow:hidden;background:var(--bg);margin:0;padding:0;border:0;border-radius:0;box-shadow:none;min-height:0;width:auto;cursor:pointer;display:block}
+.splash:active:not(:disabled){transform:none;box-shadow:none}
+.cab{position:absolute;left:50%;top:50%;width:max(100vw,calc(100vh * 572 / 1024));width:max(100vw,calc(100dvh * 572 / 1024));aspect-ratio:572/1024;transform:translate(-50%,-50%);container-type:inline-size;transform-origin:50.2% 42.3%}
+.cab img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.cab .scr{position:absolute;left:31.1%;top:33.7%;width:38.1%;height:17.3%;display:flex;align-items:center;justify-content:center;text-align:center;font:19px/1.6 var(--pixel);font-size:4.2cqw;color:var(--yellow);text-shadow:0 0 6px currentColor,0 0 16px currentColor;animation:press 1.5s steps(1) infinite}
+.cab .mq{position:absolute;left:25.3%;top:19.2%;width:49.5%;height:6.25%;display:flex;align-items:center;justify-content:center;font:18px/1 var(--pixel);font-size:4cqw;color:var(--pink);text-shadow:0 0 5px currentColor,0 0 14px currentColor;white-space:nowrap}
+@keyframes press{0%{opacity:1}66.6%{opacity:0}}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.splash.enter .cab{animation:dive .8s cubic-bezier(.6,0,.9,.4) forwards}
+.splash.enter .flash{animation:flash .8s ease-in forwards}
+@keyframes dive{to{transform:translate(-50%,-50%) scale(6)}}
+@keyframes flash{0%,55%{opacity:0}85%{opacity:1}100%{opacity:1}}
+.scan::after{content:"";position:fixed;inset:0;z-index:81;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+.boot{display:flex;align-items:center;justify-content:center;min-height:100vh;font:32px var(--crt);color:var(--cyan)}
+
+/* ---- CRT izbornik i pravila ---- */
+.menu{padding-top:40px}
+.menu .logo{font-size:30px;margin:10px 0 36px}
+.menu nav{border:2px solid var(--line);border-radius:10px;padding:14px 18px;background:radial-gradient(ellipse at 50% 40%,rgba(127,246,255,.07),transparent 70%)}
+.legal{font-size:14px;line-height:1.45;color:var(--muted);text-align:center;margin-top:34px}
+.legal a{color:var(--muted)}
+.rules h1{font:18px/1.5 var(--pixel);color:var(--cyan);text-align:center;margin:24px 0 8px}
+.rules ol,.rules ul{padding-left:24px;margin:0}
+.rules li{font-size:17px;line-height:1.5;margin:0 0 12px}
+.rules b{color:var(--yellow);font-weight:700}
 
 /* ---- gornja traka ---- */
-.topbar{position:sticky;top:0;z-index:30;margin:calc(-1 * env(safe-area-inset-top)) -14px 0;padding:calc(8px + env(safe-area-inset-top)) 14px 0;background:var(--navy);color:var(--navytext);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;transition:background .2s}
-.tcode{font:800 20px Fraunces,serif;letter-spacing:.12em}
-.tnum{font:800 30px/1 Fraunces,serif;text-align:center;min-width:76px}
-.tlogo{font:800 19px Fraunces,serif;text-align:center}
-.tlogo i{font-style:italic}
-.menubtn{justify-self:end;width:auto;min-height:48px;height:48px;margin:0;padding:0 14px;font-size:16px;background:transparent;color:var(--navytext);border-color:var(--navytext);box-shadow:none}
-.menubtn:active:not(:disabled){transform:none;background:rgba(255,255,255,.12)}
-.tspace{grid-column:1/-1;height:8px}
-.tstrip{grid-column:1/-1;height:7px;margin:8px -14px 0;background:#3A4677}
-.tstrip i{display:block;height:100%;width:100%;background:var(--gold);transition:width .25s linear}
-.topbar.low{background:var(--warn);color:#fff}
-.topbar.low .tstrip{background:#8E0F42}
-.topbar.low .tstrip i{background:#fff}
+.topbar{position:sticky;top:0;z-index:30;margin:calc(-1 * env(safe-area-inset-top)) -14px 0;padding:calc(6px + env(safe-area-inset-top)) 14px 0;background:var(--surf);border-bottom:2px solid var(--cyan);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;transition:background .2s,border-color .2s}
+.tcode{font:30px/1 var(--crt);color:var(--cyan);letter-spacing:.12em}
+.tnum{font:46px/1 var(--crt);text-align:center;min-width:76px;color:var(--yellow)}
+.tlogo{font:26px/1 var(--crt);color:var(--pink);text-align:center;letter-spacing:.06em}
+.menubtn{justify-self:end;width:auto;min-height:48px;height:48px;margin:0;padding:0 12px;font:26px/1 var(--crt);background:transparent;color:var(--text);border:2px solid var(--line);box-shadow:none}
+.menubtn:active:not(:disabled){transform:none;border-color:var(--cyan)}
+.tspace{grid-column:1/-1;height:6px}
+.tstrip{grid-column:1/-1;height:6px;margin:6px -14px 0;background:var(--line)}
+.tstrip i{display:block;height:100%;width:100%;background:var(--yellow);transition:width .25s linear}
+.topbar.low{border-color:var(--warn)}
+.topbar.low .tnum{color:var(--warn)}
+.topbar.low .tstrip i{background:var(--warn)}
 
-/* ---- karte ---- */
-.card{border:2px solid var(--ink);border-radius:10px;font-family:Fraunces,serif;font-weight:600;line-height:1.3;position:relative}
-.card.black{background:var(--navy);color:var(--navytext);box-shadow:5px 5px 0 var(--red);aspect-ratio:88/63;padding:20px 22px;font-size:24px;margin:18px 5px 20px 0;display:flex;flex-direction:column;justify-content:center}
+/* ---- karte (bez pikselnog fonta i bez sjaja) ---- */
+.card{border-radius:10px;font:700 19px/1.3 var(--sans);position:relative}
+.card.black{background:var(--bcard);color:var(--text);border:2px solid var(--cyan);box-shadow:4px 4px 0 var(--pink);aspect-ratio:88/63;padding:20px 22px;font-size:24px;margin:18px 4px 20px 0;display:flex;flex-direction:column;justify-content:center}
 .handmode .card.black{aspect-ratio:auto;min-height:150px;font-size:22px}
-.blank{display:inline-block;min-width:70px;border-bottom:3px solid var(--gold);margin:0 2px}
-.fill{color:var(--gold);text-decoration:underline 3px;text-underline-offset:5px}
-.pick2{display:inline-block;margin-top:14px;font:800 16px Archivo,sans-serif;background:var(--gold);color:var(--ink);border-radius:6px;padding:4px 12px}
-.wcard{background:var(--paper);color:var(--ink);box-shadow:4px 4px 0 var(--ink);aspect-ratio:63/88;padding:14px;font-size:19px;overflow:hidden}
-.wcard.custom{background:var(--paper2)}
-.wcard.sel{background:var(--sel);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy)}
-.ord{font-family:Archivo,sans-serif;font-weight:800;color:var(--navy)}
-.reader{text-align:center;font-size:18px;margin:16px 0 0}
-.reader b{font:800 20px Fraunces,serif;color:var(--navy)}
+.blank{display:inline-block;min-width:70px;border-bottom:3px solid var(--yellow);margin:0 2px}
+.fill{color:var(--yellow);text-decoration:underline 3px;text-underline-offset:5px}
+.pick2{display:inline-block;margin-top:14px;font:13px/1.4 var(--pixel);background:var(--yellow);color:var(--onpink);border-radius:4px;padding:6px 10px}
+.wcard{background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);box-shadow:4px 4px 0 var(--pink);aspect-ratio:63/88;padding:14px;overflow:hidden}
+.wcard.custom{background:#F3EEDD}
+.wcard.sel{background:var(--sel);border:3px solid var(--cyan);box-shadow:4px 4px 0 var(--cyan)}
+.ord{font-weight:700;color:#0B6E78}
+.reader{text-align:center;font:26px/1.2 var(--crt);color:var(--muted);margin:16px 0 0}
+.reader b{color:var(--yellow);font-weight:400}
 
 /* ---- ruka: lepeza ---- */
-.handbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(rgba(239,231,218,0),var(--bg) 26%)}
+.handbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(rgba(13,11,20,0),var(--bg) 26%)}
 .handbar .inner{position:relative;max-width:492px;margin:0 auto}
 .stage{position:absolute;left:0;right:0;bottom:calc(100% - 64px);z-index:60;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
-.hintpill{background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:6px 14px;font:700 15px Archivo,sans-serif;text-align:center}
-.wcard.big{pointer-events:auto;width:176px;margin:0;padding:16px;font:600 22px/1.28 Fraunces,serif;text-align:left;display:block;min-height:0;color:var(--ink);animation:lift .16s ease-out}
-.wcard.big.sel{background:var(--sel)}
-.wcard.big.custom{background:var(--paper2)}
+.hintpill{background:var(--surf);border:2px solid var(--line);border-radius:999px;padding:6px 14px;font:700 15px var(--sans);text-align:center;color:var(--text)}
+.wcard.big{pointer-events:auto;width:176px;margin:0;padding:16px;font:700 22px/1.28 var(--sans);text-align:left;display:block;min-height:0;animation:lift .16s ease-out}
+.wcard.big:active:not(:disabled){box-shadow:4px 4px 0 var(--pink);transform:none}
+.wcard.big.sel{background:var(--sel);box-shadow:4px 4px 0 var(--cyan)}
 @keyframes lift{from{transform:translateY(30px) scale(.8);opacity:.4}to{transform:none;opacity:1}}
 .fan{position:relative;height:146px;margin:0 -14px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer}
-.fc{position:absolute;bottom:4px;left:calc(16px + var(--x) * (100% - 108px));width:76px;aspect-ratio:63/88;transform:translateY(var(--y)) rotate(var(--r));transform-origin:50% 100%;transition:transform .14s ease;padding:8px 7px;font:600 15px/1.2 Fraunces,serif;overflow:hidden;background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:8px;box-shadow:4px 4px 0 var(--ink);pointer-events:none}
-.fc.custom{background:var(--paper2)}
+.fc{position:absolute;bottom:4px;left:calc(16px + var(--x) * (100% - 108px));width:76px;aspect-ratio:63/88;transform:translateY(var(--y)) rotate(var(--r));transform-origin:50% 100%;transition:transform .14s ease;padding:8px 7px;font:700 15px/1.2 var(--sans);overflow:hidden;background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);border-radius:8px;box-shadow:3px 3px 0 var(--pink);pointer-events:none}
+.fc.custom{background:#F3EEDD}
 .fc.up{transform:translateY(calc(var(--y) - 30px)) rotate(var(--r))}
-.fc.sel{background:var(--sel);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy)}
+.fc.sel{background:var(--sel);border:3px solid var(--cyan);box-shadow:3px 3px 0 var(--cyan)}
 
 /* ---- glasanje: okretanje ---- */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px;padding:0 5px 0 0;margin-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px;padding:0 4px 0 0;margin-top:12px}
 .flip{aspect-ratio:63/88;perspective:900px;cursor:pointer}
+.flip.wide,.wcard.res.wide{grid-column:1/-1;aspect-ratio:88/63}
 .flip .fi{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
 .flip.up .fi{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid var(--ink);border-radius:10px;box-shadow:4px 4px 0 var(--ink);overflow:hidden}
-.face.back{background:repeating-linear-gradient(45deg,rgba(255,253,248,.09) 0 6px,transparent 6px 14px),var(--red);display:flex;align-items:center;justify-content:center}
-.blogo{font:800 22px/1 Fraunces,serif;color:var(--navytext);text-align:center;border:2px solid var(--navytext);border-radius:8px;padding:10px 12px}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;overflow:hidden}
+.face.back{background:linear-gradient(rgba(255,63,164,.22) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,rgba(255,63,164,.22) 1px,transparent 1px) 0 0/14px 14px,var(--bcard);border:2px solid var(--pink);box-shadow:4px 4px 0 var(--cyan);display:flex;align-items:center;justify-content:center}
+.blogo{font:13px/1.6 var(--pixel);color:var(--cyan);text-align:center;border:2px solid var(--cyan);border-radius:6px;padding:10px 10px;background:var(--bcard)}
 .blogo span{display:block}
-.blogo i{font-style:italic}
-.face.front{transform:rotateY(180deg);background:var(--paper);color:var(--ink);font:600 19px/1.3 Fraunces,serif;padding:14px}
-.face.front.long{font-size:16px}
-.flip.sel .face.front{background:var(--sel);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy)}
+.face.front{transform:rotateY(180deg);background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);box-shadow:4px 4px 0 var(--pink);font:700 19px/1.3 var(--sans);padding:14px}
+.flip.sel .face.front{background:var(--sel);border:3px solid var(--cyan);box-shadow:4px 4px 0 var(--cyan)}
 .flip.mine{cursor:default}
-.flip.mine .face.front{background:var(--surf);color:var(--muted);border-style:dashed;box-shadow:none}
-.yours{position:absolute;left:0;right:0;bottom:0;background:var(--off);border-top:2px dashed var(--line);font:800 15px Archivo,sans-serif;text-align:center;padding:7px;color:var(--ink)}
+.flip.mine .face.front{background:#C9C4D6;color:#3A3546;border-style:dashed;box-shadow:none}
+.yours{position:absolute;left:0;right:0;bottom:0;background:#A9A2BA;border-top:2px dashed #3A3546;font:700 15px var(--sans);text-align:center;padding:7px;color:#1F1A17}
 
 /* ---- rezultati ---- */
-.wcard.win{width:min(210px,58%);margin:12px auto 26px;padding:0;font-size:22px;box-shadow:6px 6px 0 var(--gold);transform:rotate(-2deg);display:flex;flex-direction:column;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+.wcard.win{width:min(210px,58%);margin:12px auto 26px;padding:0;font-size:22px;border:3px solid var(--yellow);box-shadow:6px 6px 0 var(--yellow),0 0 28px rgba(255,207,63,.35);transform:rotate(-2deg);display:flex;flex-direction:column;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes pop{from{transform:scale(.7) rotate(4deg);opacity:0}to{transform:rotate(-2deg);opacity:1}}
-.wband{background:var(--gold);border-bottom:2px solid var(--ink);padding:8px 10px;font:800 15px/1.25 Archivo,sans-serif;text-align:center}
+.wband{background:var(--yellow);color:var(--onpink);border-bottom:2px solid var(--wtext);padding:8px 10px;font:700 15px/1.25 var(--sans);text-align:center}
 .wtext{padding:16px}
 .wcard.res{display:flex;flex-direction:column;padding:0}
 .wcard.res .wtext{flex:1;padding:12px}
-.rmeta{border-top:2px solid var(--ink);background:var(--surf);font:700 15px Archivo,sans-serif;text-align:center;padding:8px 6px}
-.nowin{text-align:center;font:800 22px Fraunces,serif;margin:16px 0}
+.rmeta{border-top:2px solid var(--wtext);background:#E6E1F0;font:700 15px var(--sans);text-align:center;padding:8px 6px;color:var(--wtext)}
+.nowin{text-align:center;font:30px var(--crt);color:var(--muted);margin:16px 0}
 
 /* ---- popisi i ostalo ---- */
-.codecard{background:var(--navy);color:var(--navytext);border:2px solid var(--ink);border-radius:10px;box-shadow:5px 5px 0 var(--red);padding:16px 20px 18px;text-align:center;margin:18px 5px 14px 0}
-.codecard .lbl{font:700 15px Archivo,sans-serif;color:#C9CFE6}
-.bigcode{font:800 72px/1 Fraunces,serif;letter-spacing:.14em;margin:8px 0 4px .14em}
-.players{display:flex;flex-direction:column;border:2px solid var(--ink);border-radius:10px;background:var(--paper);overflow:hidden}
-.prow{display:flex;justify-content:space-between;align-items:center;min-height:50px;padding:8px 14px;border-bottom:1px solid var(--surf);font-weight:700;font-size:18px}
+.codecard{background:var(--bcard);border:2px solid var(--cyan);border-radius:10px;box-shadow:4px 4px 0 var(--pink);padding:16px 20px 18px;text-align:center;margin:18px 4px 14px 0}
+.codecard .lbl{font:15px var(--sans);color:var(--muted)}
+.bigcode{font:96px/1 var(--crt);letter-spacing:.2em;margin:4px 0 2px .2em;color:var(--yellow);text-shadow:0 0 8px rgba(255,207,63,.6)}
+.players{display:flex;flex-direction:column;border:2px solid var(--line);border-radius:10px;background:var(--surf);overflow:hidden}
+.prow{display:flex;justify-content:space-between;align-items:center;min-height:50px;padding:8px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:18px}
 .prow:last-child{border-bottom:0}
 .prow.away{color:var(--muted)}
-.prow .sc{font:800 20px Fraunces,serif}
+.prow .sc{font:30px/1 var(--crt);color:var(--yellow)}
 .tag{font-size:15px;color:var(--muted);margin-left:8px;font-weight:500}
-.ok{color:var(--navy);font-weight:800}
-.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:0 14px;margin:8px 0;font-weight:700;font-size:18px}
-.toggle input{width:28px;height:28px;margin:0;padding:0;border:0;accent-color:var(--red);flex:none}
-.toggle.soft{background:var(--surf);border-color:var(--surf)}
+.ok{color:var(--cyan);font-weight:700}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;background:var(--surf);border:2px solid var(--line);border-radius:6px;padding:0 14px;margin:8px 0;font-weight:700;font-size:18px}
+.toggle input{width:28px;height:28px;margin:0;padding:0;border:0;accent-color:var(--pink);flex:none}
 .toggle .sub{display:block;font-weight:500;font-size:15px;color:var(--muted)}
-.toggle input.sw{appearance:none;-webkit-appearance:none;width:52px;height:32px;border-radius:16px;background:var(--line);border:2px solid var(--ink);position:relative}
-.toggle input.sw::before{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);box-sizing:border-box;transition:transform .15s}
-.toggle input.sw:checked{background:var(--red)}
-.toggle input.sw:checked::before{transform:translateX(20px)}
-.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:16px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(rgba(239,231,218,0),var(--bg) 30%)}
+.toggle input.sw{appearance:none;-webkit-appearance:none;width:52px;height:32px;border-radius:16px;background:var(--off);border:2px solid var(--muted);position:relative}
+.toggle input.sw::before{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--text);box-sizing:border-box;transition:transform .15s}
+.toggle input.sw:checked{background:var(--pink);border-color:var(--pink)}
+.toggle input.sw:checked::before{transform:translateX(20px);background:var(--onpink)}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:16px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(rgba(13,11,20,0),var(--bg) 30%)}
 .bar .inner{max-width:492px;margin:0 auto}
-.note{background:var(--surf);border-radius:8px;padding:14px;margin:12px 0;color:var(--muted);font-weight:700;font-size:16px;text-align:center}
-.toast{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:var(--warn);color:#fff;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:12px 18px;border-radius:8px;font-weight:700;font-size:16px;z-index:70;max-width:90%;text-align:center}
-.modal{position:fixed;inset:0;background:rgba(31,26,23,.55);display:flex;align-items:flex-end;justify-content:center;z-index:65}
-.sheet{background:var(--bg);width:100%;max-width:520px;border:2px solid var(--ink);border-bottom:0;border-radius:14px 14px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
-.sheet h3{margin:0 0 8px;font:800 26px Fraunces,serif;color:var(--navy)}
-.sheet p{font-size:16px;line-height:1.4}
+.note{background:var(--surf);border:2px solid var(--line);border-radius:6px;padding:14px;margin:12px 0;color:var(--muted);font-weight:700;font-size:16px;text-align:center}
+.toast{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:var(--warn);color:var(--onpink);border:2px solid var(--onpink);box-shadow:3px 3px 0 var(--cyan);padding:12px 18px;border-radius:6px;font-weight:700;font-size:16px;z-index:90;max-width:90%;text-align:center}
+.modal{position:fixed;inset:0;background:rgba(5,4,10,.75);display:flex;align-items:flex-end;justify-content:center;z-index:85}
+.sheet{background:var(--surf);width:100%;max-width:520px;border:2px solid var(--cyan);border-bottom:0;border-radius:12px 12px 0 0;padding:22px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet h3{margin:0 0 12px;font:15px/1.5 var(--pixel);color:var(--cyan)}
+.sheet p{font-size:17px;line-height:1.45}
 .footer{color:var(--muted);font-size:15px;text-align:center;margin-top:34px;line-height:1.4}
 .footer a{color:var(--muted)}
 .handmode .footer{display:none}
 .champ{text-align:center;margin:26px 0 10px}
-.champ .nm{font:800 56px/1.05 Fraunces,serif;color:var(--navy);text-shadow:3px 3px 0 var(--gold);margin-top:6px}
-.champ .pts{font-weight:700;font-size:18px;margin-top:10px}
+.champ .nm{font:24px/1.4 var(--pixel);color:var(--yellow);margin-top:10px;text-shadow:0 0 6px currentColor,0 0 18px currentColor}
+.champ .pts{font:28px var(--crt);margin-top:8px;color:var(--text)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -172,13 +198,19 @@ const ERR = {
 const ls = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}, del(k){try{localStorage.removeItem(k)}catch(e){}} };
 
 let token = ls.get("bf_token"), S = null, offset = 0, sel = [], voteSel = null, channel = null, channelCode = null, busy = false, lastKey = "";
-// Ekran uvijek upaljen je sada uključen po defaultu (isključen samo ako ga je igrač sam ugasio).
+// Ekran uvijek upaljen je uključen po defaultu (isključen samo ako ga je igrač sam ugasio).
 let wakeOn = ls.get("bf_wake") !== "0", wakeLock = null;
 // Stanje samo za prikaz (ne ide u bazu):
 let lifted = null, drag = null;                 // podignuta karta u lepezi
 let flip = { k: "", ids: new Set() };           // okrenute karte u glasanju, po rundi
 let tot = { k: "", v: 0 };                      // ukupno trajanje faze za traku timera
 const DUR = { playing: 90, voting: 45 };
+// Ekrani izvan sobe: "splash" (ulaz), "menu" (CRT izbornik), "rules" (pravila), "home" (upis imena i koda)
+let view = "splash";
+let bootWait = !!token;                          // ima token: čekaj get_state, da povratak u sobu ne ide kroz ulaz
+let typedOnce = false, typeRun = 0;              // tipkanje izbornika jednom po posjetu
+let ask18 = false;                               // je li otvoren prozor za potvrdu 18+
+const REDUCED = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -221,6 +253,9 @@ async function refresh(){
 }
 setInterval(refresh, 2000);
 setInterval(tickTimer, 250);
+setInterval(check18, 1000);
+// Ako mreža ne odgovori za 5 s, ne drži igrača na praznom ekranu: pokaži ulaz. Kad soba stigne, igra se otvori sama.
+setTimeout(() => { if (bootWait) { bootWait = false; render(); } }, 5000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) { refresh(); if (wakeOn) lockWake(); } });
 // Prvi (i svaki sljedeći) dodir: ako je zaključavanje ekrana palo, traži ga ponovno. Neki preglednici traže dodir.
 document.addEventListener("pointerdown", () => { if (wakeOn && (!wakeLock || wakeLock.released)) lockWake(); }, { passive: true });
@@ -257,21 +292,31 @@ function blackHTML(text, fills){
   return parts.map((p, k) => k === 0 ? p : (fills && fills[i] !== undefined ? `<span class="fill">${esc(String(fills[i++]).replace(/\.$/, ""))}</span>` : `<span class="blank"></span>`) + p).join("");
 }
 function glasova(n){ return n === 1 ? "glas" : (n >= 2 && n <= 4 ? "glasa" : "glasova"); }
-const CROWN = `<svg aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="#F2B705" stroke="#1F1A17" stroke-width="1.6" stroke-linejoin="round"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>`;
+const LICENCA = `Paket Klasici prema <a href="https://www.cardsagainsthumanity.com/" target="_blank" rel="noopener">Cards Against Humanity</a>, licenca <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank" rel="noopener">CC BY-NC-SA 2.0</a>.`;
+const CROWN = `<svg aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="#FFCF3F" stroke="#FFCF3F" stroke-width="1.4" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px rgba(255,207,63,.7))"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>`;
+const linkK = () => (new URLSearchParams(location.search).get("k") || "").toUpperCase();
 
 // ---- Prikaz ----
 function render(){
   // server_now se mijenja svake 2 s; bez njega u ključu ekran se ne crta ispočetka bez potrebe (i ne prekida animacije)
-  const key = JSON.stringify([S ? { ...S, server_now: null } : null, sel, voteSel, wakeOn]);
+  const key = JSON.stringify([S ? { ...S, server_now: null } : null, sel, voteSel, wakeOn, view, bootWait && !!token]);
   if (key === lastKey) return; lastKey = key;
   drag = null;
   const app = $("#app");
-  if (!S) { app.className = "app home"; app.innerHTML = homeHTML(); bindHome(); return; }
+  if (!S) {
+    if (token && bootWait) { app.className = "app"; app.innerHTML = `<div class="boot" role="status">UČITAVAM<span class="cursor">_</span></div>`; return; }
+    if (view === "splash") { app.className = "app"; app.innerHTML = splashHTML(); bindSplash(); return; }
+    if (view === "menu") { app.className = "app scan"; app.innerHTML = menuHTML(); bindMenu(); return; }
+    if (view === "rules") { app.className = "app"; app.innerHTML = rulesHTML(); $("#backBtn").onclick = () => go("menu"); window.scrollTo(0, 0); return; }
+    app.className = "app home"; app.innerHTML = homeHTML(); bindHome(); return;
+  }
+  bootWait = false;
+  view = "menu";                                   // nakon izlaska iz sobe vraćamo se na izbornik, ne na ulaz
   const r = S.room, me = S.me;
   if (lifted !== null && !me.hand.some(h => h.id === lifted)) lifted = null;
   const timed = r.ends_at && ["playing","voting","results"].includes(r.phase);
   const s = timed ? secondsLeft() : null;
-  let h = `<div class="topbar ${timed && s !== null && s <= 10 ? "low" : ""}" id="topbar"><span class="tcode">${esc(r.code)}</span>${timed ? `<span class="tnum" id="timer">${fmtT(s)}</span>` : `<span class="tlogo">Bez <i>filtera</i></span>`}<button class="menubtn" id="menuBtn">Izbornik</button>${timed ? `<div class="tstrip"><i id="tfill" style="width:${timerPct(s)}%"></i></div>` : `<div class="tspace"></div>`}</div>`;
+  let h = `<div class="topbar ${timed && s !== null && s <= 10 ? "low" : ""}" id="topbar"><span class="tcode">${esc(r.code)}</span>${timed ? `<span class="tnum" id="timer">${fmtT(s)}</span>` : `<span class="tlogo">BEZ FILTERA</span>`}<button class="menubtn" id="menuBtn">IZBORNIK</button>${timed ? `<div class="tstrip"><i id="tfill" style="width:${timerPct(s)}%"></i></div>` : `<div class="tspace"></div>`}</div>`;
   const handMode = r.phase === "playing" && !me.waiting && !me.submitted;
   if (r.phase === "lobby") h += lobbyHTML();
   else if (r.phase === "ended") h += endedHTML();
@@ -279,28 +324,134 @@ function render(){
   else if (r.phase === "playing") h += playingHTML();
   else if (r.phase === "voting") h += votingHTML();
   else if (r.phase === "results") h += resultsHTML();
-  h += `<div class="footer">Paket Klasici prema <a href="https://www.cardsagainsthumanity.com/" target="_blank" rel="noopener">Cards Against Humanity</a>, licenca <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank" rel="noopener">CC BY-NC-SA 2.0</a>.</div>`;
+  h += `<div class="footer">${LICENCA}</div>`;
   app.className = "app" + (handMode ? " handmode" : "");
   app.innerHTML = h;
   bindGame();
+  check18();
+}
+function go(v){ view = v; lastKey = ""; render(); }
+
+// ---- Ulazni ekran ----
+function splashHTML(){
+  return `<button class="splash scan" id="splash" aria-label="Pokreni igru Bez filtera">
+    <div class="cab"><img src="ormaric.webp" alt="Stari arkadni automat u mračnoj igraonici s neonskim svjetlima" decoding="async" onerror="this.style.visibility='hidden'">
+      <div class="mq" aria-hidden="true">BEZ FILTERA</div>
+      <div class="scr" aria-hidden="true"><span>PRESS<br>TO PLAY</span></div></div>
+    <div class="flash"></div></button>`;
+}
+function bindSplash(){
+  const el = $("#splash"); let gone = false;
+  el.onclick = () => {
+    if (gone) return; gone = true;
+    const next = linkK() ? "home" : "menu";
+    if (REDUCED) { go(next); return; }
+    el.classList.add("enter");
+    setTimeout(() => go(next), 820);
+  };
 }
 
+// ---- CRT izbornik ----
+const MENU = [
+  { id: "mPlay", t: "> KRENI IGRATI" },
+  { id: "mRules", t: "> PRAVILA" },
+  { id: "mLogin", t: "> PRIJAVA / REGISTRACIJA", soon: true }
+];
+function menuHTML(){
+  const full = typedOnce || REDUCED;
+  return `<div class="menu"><h1 class="logo"><span>BEZ</span><span>FILTERA</span></h1>
+  <nav aria-label="Glavni izbornik">${MENU.map((m, i) => `<button class="crtbtn ${m.soon ? "soon" : ""}" id="${m.id}" aria-label="${esc(m.t.slice(2))}${m.soon ? ", uskoro" : ""}"><span class="tt">${full ? esc(m.t) : ""}</span>${m.soon ? `<span class="tagsoon" ${full ? "" : 'style="visibility:hidden"'}>USKORO</span>` : ""}${i === MENU.length - 1 ? `<span class="cursor" ${full ? "" : 'style="visibility:hidden"'}>_</span>` : ""}</button>`).join("")}</nav>
+  <div class="legal">Igra sadrži sadržaj za odrasle. Namijenjeno osobama starijima od 18 godina.<br><br>${LICENCA}</div></div>`;
+}
+function bindMenu(){
+  $("#mPlay").onclick = () => go("home");
+  $("#mRules").onclick = () => go("rules");
+  $("#mLogin").onclick = () => toast2("Uskoro!");
+  if (typedOnce || REDUCED) { typedOnce = true; return; }
+  typedOnce = true;                                  // i kad netko klikne prije kraja, sljedeći put se izbornik ne tipka ponovno
+  const run = ++typeRun;
+  let mi = 0, ci = 0;
+  const step = () => {
+    if (run !== typeRun || view !== "menu") return;          // korisnik je otišao s izbornika
+    const m = MENU[mi], el = document.querySelector(`#${m.id} .tt`); if (!el) return;
+    ci++; el.textContent = m.t.slice(0, ci);
+    if (ci >= m.t.length) {
+      const b = $("#" + m.id); b.querySelectorAll(".tagsoon,.cursor").forEach(x => x.style.visibility = "");
+      mi++; ci = 0;
+      if (mi >= MENU.length) { typedOnce = true; return; }
+    }
+    setTimeout(step, 55);
+  };
+  setTimeout(step, 250);
+}
+
+// ---- Pravila ----
+function rulesHTML(){
+  return `<div class="rules"><h1 class="glow">PRAVILA</h1>
+  <h2>KAKO SE IGRA</h2>
+  <ol>
+    <li>Igra se u društvu, od <b>3 do 20 igrača</b>, svatko na svom mobitelu.</li>
+    <li>Jedan igrač napravi sobu i dobije <b>kod od 4 slova</b>. Ostali uđu s tim kodom ili preko poveznice.</li>
+    <li>Svatko dobije <b>7 bijelih karata</b> (odgovori).</li>
+    <li>Svaka runda otvara <b>crnu kartu</b>, pitanje s prazninom.</li>
+    <li>Imaš <b>90 sekundi</b> da baciš bijelu kartu koja najbolje (ili najgore) popunjava prazninu. Kad piše <b>"Izvuci 2"</b>, baciš dvije, redom. Ako ne stigneš, sustav baci nasumičnu kartu umjesto tebe.</li>
+    <li>Svi odgovori se pokažu <b>anonimno</b>. Jedan igrač ih čita naglas, a svi imaju <b>45 sekundi</b> da glasaju za najbolji. <b>Za svoj ne možeš.</b></li>
+    <li>Pobjednik runde dobije <b>1 bod</b>. Kod neriješenog svi s najviše glasova dobiju bod.</li>
+    <li>Jednom po igri možeš <b>dodati svoj odgovor</b>. Dobit će ga netko drugi i nitko neće znati da je tvoj.</li>
+    <li>Igra traje dok host ne klikne <b>Završi igru</b>. Može se ući i usred igre.</li>
+  </ol>
+  <h2>PAKETI</h2>
+  <ul>
+    <li><b>Pristojno</b>: uvijek uključen. Svakodnevica, hrvatski kvartovi, fakulteti, posao, more, sport, politika bez imena.</li>
+    <li><b>18+</b>: vulgarno i neugodno. Uključuje host.</li>
+    <li><b>Klasici</b>: hrvatske verzije poznatih karata, prema Cards Against Humanity (licenca CC BY-NC-SA).</li>
+  </ul>
+  <button class="crtbtn" id="backBtn" style="margin-top:20px">&gt; NAZAD<span class="cursor">_</span></button></div>`;
+}
+
+// ---- Upis imena (stari početni ekran) ----
 function homeHTML(){
-  const params = new URLSearchParams(location.search);
-  const k = (params.get("k") || "").toUpperCase();
-  return `<div class="hero"><div class="deco d1" aria-hidden="true"></div><div class="deco d2" aria-hidden="true"></div><h1 class="logo"><span>Bez</span><span><i>filtera</i></span></h1></div>
+  const k = linkK();
+  return `<h1 class="logo"><span>BEZ</span><span>FILTERA</span></h1>
   <p class="tagline muted">Kartaška igra za ekipu. Svatko na svom mobitelu.</p>
   <input id="name" placeholder="Tvoje ime" maxlength="20" value="${esc(ls.get("bf_name") || "")}" autocomplete="nickname" aria-label="Tvoje ime">
   ${k ? "" : `<button class="primary" id="createBtn">Napravi sobu</button><div class="or">ili uđi u postojeću</div>`}
   <input id="code" class="code-input" placeholder="KOD" maxlength="4" value="${esc(k)}" autocomplete="off" aria-label="Kod sobe">
   <button class="${k ? "primary" : "secondary"}" id="joinBtn">Uđi u sobu</button>
-  ${k ? `<div class="or"><a href="${location.pathname}">ili napravi novu sobu</a></div>` : ""}`;
+  ${k ? `<div class="or"><a href="${location.pathname}">ili napravi novu sobu</a></div>` : `<button class="crtbtn" id="backBtn" style="margin-top:14px">&gt; NAZAD</button>`}`;
 }
 function bindHome(){
   const nm = () => { const v = $("#name").value.trim(); if (!v) { toast(ERR.IME_PRAZNO); return null; } ls.set("bf_name", v); return v; };
   const done = d => { token = d.token; ls.set("bf_token", token); history.replaceState(null, "", location.pathname); };
   $("#createBtn") && ($("#createBtn").onclick = () => { const n = nm(); if (n) act("create_room", { p_name: n }, done); });
   $("#joinBtn").onclick = () => { const n = nm(); const c = $("#code").value.trim().toUpperCase(); if (!n) return; if (c.length !== 4) { toast("Kod ima 4 slova."); return; } act("join_room", { p_code: c, p_name: n }, done); };
+  $("#backBtn") && ($("#backBtn").onclick = () => go("menu"));
+}
+
+// ---- Potvrda za 18+ ----
+// Pita svakog igrača u sobi u kojoj je 18+ uključen, jednom po uređaju (ključ bf_18ok).
+// Time su pokriveni i igrači koji su već bili u sobi kad je host naknadno uključio 18+.
+function sheet18(onYes, onNo){
+  ask18 = true;
+  sheet(`<h3>PAKET 18+</h3><p>Paket 18+ sadrži vulgaran sadržaj. Potvrđujem da imam 18 ili više godina.</p>
+  <button class="primary" id="y18">Potvrđujem</button><button class="secondary" id="n18">Odustani</button>`, () => {
+    $("#modal").onclick = null;                    // ovdje se mora odlučiti: dodir pokraj prozora ga ne zatvara
+    $("#y18").onclick = () => { ls.set("bf_18ok", "1"); ask18 = false; closeSheet(); onYes && onYes(); };
+    $("#n18").onclick = () => { ask18 = false; closeSheet(); onNo && onNo(); };
+  });
+}
+function check18(){
+  if (!S || ask18 || !S.room.include_18 || ls.get("bf_18ok") === "1") return;
+  if ($("#overlay").innerHTML) return;             // drugi prozor je otvoren; pitamo kad se zatvori
+  const host = S.me.is_host, lobby = S.room.phase === "lobby";
+  sheet18(null, () => {
+    if (host && lobby) act("set_packs", { p_token: token, p_18: false, p_klasici: !!S.room.include_klasici });
+    else leaveRoom();
+  });
+}
+async function leaveRoom(){
+  try { await call("leave_room", { p_token: token }); ping(); } catch(e){}
+  ls.del("bf_token"); token = null; S = null; view = "menu"; lastKey = ""; render();
 }
 
 function playersHTML(showDone){
@@ -308,21 +459,21 @@ function playersHTML(showDone){
 }
 
 function wakeToggleHTML(){
-  return `<label class="toggle soft"><span>Ekran uvijek upaljen<span class="sub">Mobitel neće zaspati usred runde</span></span><input type="checkbox" class="sw" id="wakeL" role="switch" ${wakeOn ? "checked" : ""}></label>`;
+  return `<label class="toggle"><span>Ekran uvijek upaljen<span class="sub">Mobitel neće zaspati usred runde</span></span><input type="checkbox" class="sw" id="wakeL" role="switch" ${wakeOn ? "checked" : ""}></label>`;
 }
 
 function lobbyHTML(){
   const r = S.room, me = S.me, n = S.players.filter(p => p.present).length;
   const link = location.origin + location.pathname + "?k=" + r.code;
   return `<div class="codecard"><div class="lbl">Kod sobe</div><div class="bigcode">${esc(r.code)}</div><div class="lbl">Pokaži ekran ili pošalji poveznicu.</div></div>
-  <button class="secondary" id="shareBtn" data-link="${esc(link)}">Kopiraj poveznicu za ekipu</button>
-  <h2>Igrači (${S.players.length})</h2>${playersHTML(false)}
-  ${me.is_host ? `<h2>Paketi</h2>
+  <button class="secondary" id="shareBtn" data-link="${esc(link)}">Kopiraj poveznicu</button>
+  <h2>IGRAČI (${S.players.length})</h2>${playersHTML(false)}
+  ${me.is_host ? `<h2>PAKETI</h2>
     <label class="toggle">Pristojno <input type="checkbox" checked disabled></label>
     <label class="toggle">18+ <input type="checkbox" id="p18" ${r.include_18 ? "checked" : ""}></label>
     <label class="toggle">Klasici <input type="checkbox" id="pkl" ${r.include_klasici ? "checked" : ""}></label>`
   : `<div class="note">Paketi: Pristojno${r.include_18 ? " + 18+" : ""}${r.include_klasici ? " + Klasici" : ""}. Čekamo da host krene.</div>`}
-  <h2>Postavke</h2>${wakeToggleHTML()}
+  <h2>POSTAVKE</h2>${wakeToggleHTML()}
   ${me.can_add ? `<button class="secondary" id="addBtn">Dodaj svoj odgovor</button>` : `<div class="note">Tvoj odgovor je dodan ✓</div>`}
   ${me.is_host ? `<div class="bar"><div class="inner"><button class="primary" id="startBtn" ${n < r.min_players ? "disabled" : ""}>${n < r.min_players ? `Treba još ${r.min_players - n}` : "Kreni"}</button></div></div>` : ""}`;
 }
@@ -350,12 +501,12 @@ function playingHTML(){
     return `<div class="card black"><div>${blackHTML(r.black)}</div></div><div class="note">Bacio si ✓ ${left.length ? "Čekamo: " + left.join(", ") : ""}</div>${playersHTML(true)}${addHTML()}`;
   }
   const need = r.pick;
-  return `<div class="card black"><div>${blackHTML(r.black)}</div>${need > 1 ? `<div><span class="pick2">Izvuci ${need}</span></div>` : ""}</div>
+  return `<div class="card black"><div>${blackHTML(r.black)}</div>${need > 1 ? `<div><span class="pick2">IZVUCI ${need}</span></div>` : ""}</div>
   ${addHTML()}
   <div class="handbar"><div class="inner">
     <div class="stage" id="stage">${stageHTML()}</div>
     <div class="fan" id="fan" role="listbox" aria-label="Tvoje karte">${fanHTML()}</div>
-    <button class="primary" id="playBtn" ${sel.length !== need ? "disabled" : ""}>${sel.length === need ? "Baci" : need > 1 ? `Odaberi ${need} karte (${sel.length}/${need})` : "Odaberi kartu"}</button>
+    <button class="primary" id="playBtn" ${sel.length !== need ? "disabled" : ""}>${sel.length === need ? "Baci" : need > 1 ? `Odaberi ${need} (${sel.length}/${need})` : "Odaberi kartu"}</button>
   </div></div>`;
 }
 function toggleSel(id){
@@ -391,17 +542,17 @@ function flipSync(){ const k = S.room.code + ":" + S.room.round; if (flip.k !== 
 function isUp(s){ return !!s.mine || !!S.me.voted_for || flip.ids.has(String(s.id)); }
 function voteState(){ const o = S.submissions.filter(s => !s.mine); const up = o.filter(isUp).length; return { up, total: o.length, all: up === o.length }; }
 function voteHint(v){ return S.me.voted_for ? "Glasao si ✓ Čekamo ostale." : !v.all ? `Dodiruj karte da ih okreneš (${v.up} od ${v.total})` : voteSel ? "Odabrano. Potvrdi glas." : "Pročitajte naglas i odaberite najbolji."; }
-function voteBtnText(v){ return !v.all ? `Okreni sve karte (${v.up}/${v.total})` : voteSel ? "Glasaj" : "Odaberi najbolji"; }
+function voteBtnText(v){ return !v.all ? `Okreni sve (${v.up}/${v.total})` : voteSel ? "Glasaj" : "Odaberi najbolji"; }
 function votingHTML(){
   flipSync();
   const r = S.room, voted = S.me.voted_for, v = voteState();
-  return `<div class="reader">Naglas čita: <b>${esc(readerName())}</b></div>
+  return `<div class="reader">NAGLAS ČITA: <b>${esc(readerName())}</b></div>
   <div class="card black"><div>${blackHTML(r.black)}</div></div>
   <p class="muted" id="vhint" style="margin:0;font-size:16px;font-weight:700;text-align:center">${voteHint(v)}</p>
-  <div class="grid2">${S.submissions.map(s => { const id = String(s.id), t = s.texts.map(esc).join(" / "), on = (voteSel === id || (voted !== null && voted !== undefined && String(voted) === id));
-    return `<div class="flip ${isUp(s) ? "up" : ""} ${s.mine ? "mine" : ""} ${on ? "sel" : ""}" data-flip="${esc(id)}" role="button" aria-label="${isUp(s) ? "Odgovor" : "Okreni kartu"}">
-      <div class="fi"><div class="face back"><span class="blogo"><span>Bez</span><span><i>filtera</i></span></span></div>
-      <div class="face front ${t.length > 70 ? "long" : ""}">${t}${s.mine ? '<span class="yours">tvoja</span>' : ""}</div></div></div>`; }).join("")}</div>
+  <div class="grid2">${S.submissions.map(s => { const id = String(s.id), t = s.texts.map(esc).join(" / "), raw = s.texts.join(" / "), on = (voteSel === id || (voted !== null && voted !== undefined && String(voted) === id));
+    return `<div class="flip ${isUp(s) ? "up" : ""} ${s.mine ? "mine" : ""} ${on ? "sel" : ""} ${raw.length > 80 ? "wide" : ""}" data-flip="${esc(id)}" role="button" aria-label="${isUp(s) ? "Odgovor" : "Okreni kartu"}">
+      <div class="fi"><div class="face back"><span class="blogo"><span>BEZ</span><span>FILTERA</span></span></div>
+      <div class="face front">${t}${s.mine ? '<span class="yours">tvoja</span>' : ""}</div></div></div>`; }).join("")}</div>
   ${voted ? "" : `<div class="bar"><div class="inner"><button class="primary" id="voteBtn" ${voteSel && v.all ? "" : "disabled"}>${voteBtnText(v)}</button></div></div>`}`;
 }
 function bindFlips(){
@@ -425,9 +576,9 @@ function resultsHTML(){
   const subs = [...S.submissions].sort((a, b) => b.votes - a.votes);
   const win = subs.filter(s => s.winner), rest = subs.filter(s => !s.winner);
   return `<div class="card black"><div>${blackHTML(r.black, win[0] ? win[0].texts : null)}</div></div>
-  ${win.length ? win.map(w => `<div class="card wcard win"><div class="wband">Pobjednik · ${esc(w.player)} · ${esc(w.votes)} ${glasova(w.votes)}</div><div class="wtext">${w.texts.map(esc).join(" / ")}</div></div>`).join("") : `<div class="nowin">Nitko nije dobio glas</div>`}
-  ${rest.length ? `<div class="grid2">${rest.map(s => `<div class="card wcard res"><div class="wtext">${s.texts.map(esc).join(" / ")}</div><div class="rmeta">${esc(s.player)}${s.auto ? " (bacio sustav)" : ""} · ${esc(s.votes)} ${glasova(s.votes)}</div></div>`).join("")}</div>` : ""}
-  <h2>Bodovi</h2>${playersHTML(false)}`;
+  ${win.length ? win.map(w => `<div class="card wcard win"><div class="wband">Pobjednik · ${esc(w.player)} · ${esc(w.votes)} ${glasova(w.votes)}</div><div class="wtext">${w.texts.map(esc).join(" / ")}</div></div>`).join("") : `<div class="nowin">NITKO NIJE DOBIO GLAS</div>`}
+  ${rest.length ? `<div class="grid2">${rest.map(s => `<div class="card wcard res ${s.texts.join(" / ").length > 80 ? "wide" : ""}"><div class="wtext">${s.texts.map(esc).join(" / ")}</div><div class="rmeta">${esc(s.player)}${s.auto ? " (bacio sustav)" : ""} · ${esc(s.votes)} ${glasova(s.votes)}</div></div>`).join("")}</div>` : ""}
+  <h2>BODOVI</h2>${playersHTML(false)}`;
 }
 
 function waitingHTML(){
@@ -438,11 +589,22 @@ function endedHTML(){
   const top = S.players[0];
   const champs = top ? S.players.filter(p => p.score === top.score) : [];
   return `<div class="champ">${CROWN}<div class="nm">${champs.map(p => esc(p.name)).join(" i ")}</div>${top ? `<div class="pts">${champs.length > 1 ? "dijele pobjedu sa" : "pobjeđuje sa"} ${esc(top.score)} ${top.score === 1 ? "bodom" : "bodova"}</div>` : ""}</div>
-  <h2>Konačni poredak</h2>${playersHTML(false)}
+  <h2>KONAČNI POREDAK</h2>${playersHTML(false)}
   ${S.me.is_host ? `<div class="bar"><div class="inner"><button class="primary" id="startBtn">Nova igra</button></div></div>` : `<div class="note">Host može pokrenuti novu igru.</div>`}`;
 }
 
 function addHTML(){ return S.me.can_add ? `<button class="secondary" id="addBtn" style="margin-top:14px">Dodaj svoj odgovor</button>` : ""; }
+
+function set18(){
+  const b = id => document.getElementById(id);
+  const send = () => act("set_packs", { p_token: token, p_18: b("p18").checked, p_klasici: b("pkl").checked });
+  if (b("p18").checked && ls.get("bf_18ok") !== "1") {
+    b("p18").checked = false;                       // ostaje isključeno dok host ne potvrdi
+    sheet18(() => { const c = b("p18"); if (c) { c.checked = true; send(); } }, null);
+    return;
+  }
+  send();
+}
 
 function bindGame(){
   bindFan();
@@ -451,12 +613,12 @@ function bindGame(){
   b("playBtn") && (b("playBtn").onclick = () => act("play_cards", { p_token: token, p_cards: sel }, () => { sel = []; lifted = null; }));
   b("voteBtn") && (b("voteBtn").onclick = () => voteSel && voteState().all && act("vote", { p_token: token, p_submission: voteSel }));
   b("startBtn") && (b("startBtn").onclick = () => { if (wakeOn) lockWake(); act("start_game", { p_token: token }); });
-  b("p18") && (b("p18").onchange = () => act("set_packs", { p_token: token, p_18: b("p18").checked, p_klasici: b("pkl").checked }));
+  b("p18") && (b("p18").onchange = set18);
   b("pkl") && (b("pkl").onchange = () => act("set_packs", { p_token: token, p_18: b("p18").checked, p_klasici: b("pkl").checked }));
   b("wakeL") && (b("wakeL").onchange = toggleWake);
   b("addBtn") && (b("addBtn").onclick = openAdd);
   b("menuBtn") && (b("menuBtn").onclick = openMenu);
-  b("shareBtn") && (b("shareBtn").onclick = async () => { try { await navigator.clipboard.writeText(b("shareBtn").dataset.link); toast("Poveznica kopirana. Pošalji je ekipi."); } catch(e) { toast(b("shareBtn").dataset.link); } });
+  b("shareBtn") && (b("shareBtn").onclick = async () => { try { await navigator.clipboard.writeText(b("shareBtn").dataset.link); toast2("Poveznica kopirana. Pošalji je ekipi."); } catch(e) { toast2(b("shareBtn").dataset.link); } });
 }
 
 function sheet(html, bind){
@@ -467,7 +629,7 @@ function sheet(html, bind){
 function closeSheet(){ $("#overlay").innerHTML = ""; }
 
 function openAdd(){
-  sheet(`<h3>Dodaj svoj odgovor</h3><p class="muted" style="margin:0 0 8px">Jedan po igri. Dobit će ga netko drugi u sljedećih par izvlačenja i nitko neće znati da je tvoj. Ostaje samo u ovoj sobi.</p>
+  sheet(`<h3>DODAJ SVOJ ODGOVOR</h3><p class="muted" style="margin:0 0 8px">Jedan po igri. Dobit će ga netko drugi u sljedećih par izvlačenja i nitko neće znati da je tvoj. Ostaje samo u ovoj sobi.</p>
   <input id="addText" maxlength="80" placeholder="npr. Šime kad popije treće pivo" aria-label="Tvoj odgovor">
   <button class="primary" id="addOk">Dodaj</button><button class="secondary" id="addNo">Odustani</button>`, () => {
     $("#addText").focus();
@@ -479,15 +641,15 @@ function toast2(m){ const d=document.createElement("div"); d.className="toast"; 
 
 function openMenu(){
   const host = S.me.is_host, inGame = ["playing","voting","results"].includes(S.room.phase);
-  sheet(`<h3>${esc(S.me.name)} · soba ${esc(S.room.code)}</h3>
+  sheet(`<h3>${esc(S.me.name)} · ${esc(S.room.code)}</h3>
   <label class="toggle">Ekran uvijek upaljen <input type="checkbox" class="sw" id="wakeT" role="switch" ${wakeOn ? "checked" : ""}></label>
-  ${host && inGame ? `<button class="secondary" id="endBtn">Završi igru i pokaži poredak</button>` : ""}
+  ${host && inGame ? `<button class="secondary" id="endBtn">Završi igru</button>` : ""}
   <button class="danger" id="leaveBtn">Izađi iz sobe</button>
   <button class="secondary" id="closeBtn">Zatvori</button>`, () => {
     $("#wakeT").onchange = toggleWake;
     $("#closeBtn").onclick = closeSheet;
-    $("#endBtn") && ($("#endBtn").onclick = () => sheet(`<h3>Završiti igru?</h3><p class="muted">Svima se prikazuje konačni poredak.</p><button class="primary" id="y">Da, završi</button><button class="secondary" id="n">Ne</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = () => { closeSheet(); act("end_game", { p_token: token }); }; }));
-    $("#leaveBtn").onclick = () => sheet(`<h3>Izaći iz sobe?</h3><p class="muted">Bodovi ti se gube. Možeš ući ponovno s kodom.</p><button class="danger" id="y">Izađi</button><button class="secondary" id="n">Ostani</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = async () => { closeSheet(); try { await call("leave_room", { p_token: token }); ping(); } catch(e){} ls.del("bf_token"); token = null; S = null; lastKey = ""; render(); }; });
+    $("#endBtn") && ($("#endBtn").onclick = () => sheet(`<h3>ZAVRŠITI IGRU?</h3><p class="muted">Svima se prikazuje konačni poredak.</p><button class="primary" id="y">Da, završi</button><button class="secondary" id="n">Ne</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = () => { closeSheet(); act("end_game", { p_token: token }); }; }));
+    $("#leaveBtn").onclick = () => sheet(`<h3>IZAĆI IZ SOBE?</h3><p class="muted">Bodovi ti se gube. Možeš ući ponovno s kodom.</p><button class="danger" id="y">Izađi</button><button class="secondary" id="n">Ostani</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = () => { closeSheet(); leaveRoom(); }; });
   });
 }
 
