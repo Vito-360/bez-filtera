@@ -14,9 +14,13 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:500}
 body{padding:0 0 env(safe-area-inset-bottom)}
-.app{max-width:520px;margin:0 auto;padding:env(safe-area-inset-top) 14px 130px;min-height:100vh}
+.app{max-width:520px;margin:0 auto;padding:env(safe-area-inset-top) 14px 130px;min-height:100vh;min-height:100dvh}
 .app.home{padding-top:calc(28px + env(safe-area-inset-top))}
-.app.handmode{padding-bottom:480px}
+/* ruka: sve u normalnom toku (crna karta, traka, lepeza, gumb), ništa se ne preklapa */
+.app.handmode{display:flex;flex-direction:column;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+/* glasanje i rezultati: donji razmak = visina gumba (postavlja fitScreen) */
+.app.fit{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+.app.measure{min-height:0!important}
 .muted{color:var(--muted)}
 h2{font:13px/1.5 var(--pixel);color:var(--cyan);margin:28px 0 12px}
 .glow{text-shadow:0 0 6px currentColor,0 0 18px currentColor}
@@ -77,14 +81,16 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 .rules b{color:var(--yellow);font-weight:700}
 
 /* ---- gornja traka ---- */
-.topbar{position:sticky;top:0;z-index:30;margin:calc(-1 * env(safe-area-inset-top)) -14px 0;padding:calc(6px + env(safe-area-inset-top)) 14px 0;background:var(--surf);border-bottom:2px solid var(--cyan);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;transition:background .2s,border-color .2s}
+/* visina: 48 (red) + 6 (traka timera) + 2 (obrub) = 56 px */
+.topbar{position:sticky;top:0;z-index:30;margin:calc(-1 * env(safe-area-inset-top)) -14px 0;padding:env(safe-area-inset-top) 14px 0;background:var(--surf);border-bottom:2px solid var(--cyan);display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:48px auto;align-items:center;gap:0 8px;transition:background .2s,border-color .2s}
 .tcode{font:30px/1 var(--crt);color:var(--cyan);letter-spacing:.12em}
-.tnum{font:46px/1 var(--crt);text-align:center;min-width:76px;color:var(--yellow)}
+.tnum{font:44px/1 var(--crt);text-align:center;min-width:76px;color:var(--yellow)}
 .tlogo{font:26px/1 var(--crt);color:var(--pink);text-align:center;letter-spacing:.06em}
-.menubtn{justify-self:end;width:auto;min-height:48px;height:48px;margin:0;padding:0 12px;font:26px/1 var(--crt);background:transparent;color:var(--text);border:2px solid var(--line);box-shadow:none}
+.menubtn{justify-self:end;width:48px;min-height:48px;height:48px;margin:0;padding:0;display:grid;place-items:center;font:30px/1 var(--crt);background:transparent;color:var(--text);border:2px solid var(--line);box-shadow:none}
+.menubtn svg{display:block}
 .menubtn:active:not(:disabled){transform:none;border-color:var(--cyan)}
 .tspace{grid-column:1/-1;height:6px}
-.tstrip{grid-column:1/-1;height:6px;margin:6px -14px 0;background:var(--line)}
+.tstrip{grid-column:1/-1;height:6px;margin:0 -14px;background:var(--line)}
 .tstrip i{display:block;height:100%;width:100%;background:var(--yellow);transition:width .25s linear}
 .topbar.low{border-color:var(--warn)}
 .topbar.low .tnum{color:var(--warn)}
@@ -92,57 +98,70 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 
 /* ---- karte (bez pikselnog fonta i bez sjaja) ---- */
 .card{border-radius:10px;font:700 19px/1.3 var(--sans);position:relative}
-.card.black{background:var(--bcard);color:var(--text);border:2px solid var(--cyan);box-shadow:4px 4px 0 var(--pink);aspect-ratio:88/63;padding:20px 22px;font-size:24px;margin:18px 4px 20px 0;display:flex;flex-direction:column;justify-content:center}
-.handmode .card.black{aspect-ratio:auto;min-height:150px;font-size:22px}
+/* crna karta: bez fiksnog omjera, visina prema tekstu; veličinu teksta po potrebi smanjuje fitScreen (--bfs) */
+.card.black{background:var(--bcard);color:var(--text);border:2px solid var(--cyan);box-shadow:4px 4px 0 var(--pink);padding:16px;font-size:var(--bfs,20px);line-height:1.3;margin:12px 4px 10px 0;flex:none}
 .blank{display:inline-block;min-width:70px;border-bottom:3px solid var(--yellow);margin:0 2px}
 .fill{color:var(--yellow);text-decoration:underline 3px;text-underline-offset:5px}
-.pick2{display:inline-block;margin-top:14px;font:13px/1.4 var(--pixel);background:var(--yellow);color:var(--onpink);border-radius:4px;padding:6px 10px}
+.pick2{position:absolute;top:-12px;right:12px;font:11px/1.4 var(--pixel);background:var(--yellow);color:var(--onpink);border:2px solid var(--bg);border-radius:4px;padding:3px 8px}
 .wcard{background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);box-shadow:4px 4px 0 var(--pink);aspect-ratio:63/88;padding:14px;overflow:hidden}
 .wcard.custom{background:#F3EEDD}
 .wcard.sel{background:var(--sel);border:3px solid var(--cyan);box-shadow:4px 4px 0 var(--cyan)}
 .ord{font-weight:700;color:#0B6E78}
-.reader{text-align:center;font:26px/1.2 var(--crt);color:var(--muted);margin:16px 0 0}
-.reader b{color:var(--yellow);font-weight:400}
+.reader{display:flex;justify-content:center;gap:8px;font:24px/1.2 var(--crt);color:var(--muted);margin:8px 0 0;white-space:nowrap}
+.reader b{color:var(--yellow);font-weight:400;min-width:0;overflow:hidden;text-overflow:ellipsis}
 
 /* ---- ruka: lepeza ---- */
-.handbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(rgba(13,11,20,0),var(--bg) 26%)}
-.handbar .inner{position:relative;max-width:492px;margin:0 auto}
-.stage{position:absolute;left:0;right:0;bottom:calc(100% - 64px);z-index:60;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
-.hintpill{background:var(--surf);border:2px solid var(--line);border-radius:999px;padding:6px 14px;font:700 15px var(--sans);text-align:center;color:var(--text)}
-.wcard.big{pointer-events:auto;width:176px;margin:0;padding:16px;font:700 22px/1.28 var(--sans);text-align:left;display:block;min-height:0;animation:lift .16s ease-out}
-.wcard.big:active:not(:disabled){box-shadow:4px 4px 0 var(--pink);transform:none}
-.wcard.big.sel{background:var(--sel);box-shadow:4px 4px 0 var(--cyan)}
-@keyframes lift{from{transform:translateY(30px) scale(.8);opacity:.4}to{transform:none;opacity:1}}
-.fan{position:relative;height:146px;margin:0 -14px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer}
-.fc{position:absolute;bottom:4px;left:calc(16px + var(--x) * (100% - 108px));width:76px;aspect-ratio:63/88;transform:translateY(var(--y)) rotate(var(--r));transform-origin:50% 100%;transition:transform .14s ease;padding:8px 7px;font:700 15px/1.2 var(--sans);overflow:hidden;background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);border-radius:8px;box-shadow:3px 3px 0 var(--pink);pointer-events:none}
+.handbar{margin-top:auto;padding-top:14px}
+.handbar .inner{max-width:492px;margin:0 auto}
+.handbar #playBtn{margin:6px 0 0}
+/* traka s tekstom podignute karte: uvijek iste visine (3 reda), pa se ekran ne trza dok prelaziš prstom */
+.peek{position:relative;display:block;width:100%;height:calc(3 * 25px + 24px);min-height:0;margin:0 3px 0 0;padding:10px 12px;text-align:left;font:700 20px/25px var(--sans);background:#FFFDF8;color:#1F1A17;border:2px solid #1F1A17;border-radius:8px;box-shadow:3px 3px 0 #FF3FA4;overflow:visible}
+.peek:active:not(:disabled){transform:none;box-shadow:3px 3px 0 #FF3FA4}
+.peek.sel,.peek.sel:active:not(:disabled){background:#CFF9FF;box-shadow:3px 3px 0 var(--cyan)}
+.peek.custom{background:#F3EEDD}
+.peek .ptxt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.peek .ptag{position:absolute;top:-12px;right:10px;font:700 13px/1 var(--sans);padding:5px 8px;border-radius:4px;background:#2C2738;color:#F1EEFA;white-space:nowrap}
+.peek .ptag.on{background:#0B6E78;color:#FFFDF8}
+.peek.empty{display:flex;align-items:center;justify-content:center;text-align:center;background:transparent;color:#A39CB5;border:2px dashed #A39CB5;box-shadow:none}
+.fan{position:relative;height:156px;margin:4px -14px 0;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer}
+.fc{position:absolute;bottom:22px;left:calc(16px + var(--x) * (100% - 108px));width:76px;aspect-ratio:63/88;transform:translateY(var(--y)) rotate(var(--r));transform-origin:50% 100%;transition:transform .14s ease;padding:8px 7px;font:700 15px/1.2 var(--sans);overflow:hidden;background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);border-radius:8px;box-shadow:3px 3px 0 var(--pink);pointer-events:none}
 .fc.custom{background:#F3EEDD}
 .fc.up{transform:translateY(calc(var(--y) - 30px)) rotate(var(--r))}
 .fc.sel{background:var(--sel);border:3px solid var(--cyan);box-shadow:3px 3px 0 var(--cyan)}
 
 /* ---- glasanje: okretanje ---- */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px;padding:0 4px 0 0;margin-top:12px}
-.flip{aspect-ratio:63/88;perspective:900px;cursor:pointer}
-.flip.wide,.wcard.res.wide{grid-column:1/-1;aspect-ratio:88/63}
-.flip .fi{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
+/* karte odgovora bez omjera 63:88: visina prema tekstu (najmanje 72 px), veličinu teksta po potrebi smanjuje fitScreen (--afs) */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 4px 0 0;margin-top:8px}
+.flip{perspective:900px;cursor:pointer;min-height:72px}
+.flip.wide,.wcard.res.wide{grid-column:1/-1}
+.flip .fi{display:grid;height:100%;transition:transform .6s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
 .flip.up .fi{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;overflow:hidden}
+.face{grid-area:1/1;position:relative;min-height:72px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;overflow:hidden}
 .face.back{background:linear-gradient(rgba(255,63,164,.22) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,rgba(255,63,164,.22) 1px,transparent 1px) 0 0/14px 14px,var(--bcard);border:2px solid var(--pink);box-shadow:4px 4px 0 var(--cyan);display:flex;align-items:center;justify-content:center}
 .blogo{font:13px/1.6 var(--pixel);color:var(--cyan);text-align:center;border:2px solid var(--cyan);border-radius:6px;padding:10px 10px;background:var(--bcard)}
 .blogo span{display:block}
-.face.front{transform:rotateY(180deg);background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);box-shadow:4px 4px 0 var(--pink);font:700 19px/1.3 var(--sans);padding:14px}
+.face.front{transform:rotateY(180deg);background:var(--wcard);color:var(--wtext);border:2px solid var(--wtext);box-shadow:4px 4px 0 var(--pink);font:700 var(--afs,17px)/1.25 var(--sans);padding:10px 12px;display:flex;flex-direction:column}
+.face.front .at{flex:1}
 .flip.sel .face.front{background:var(--sel);border:3px solid var(--cyan);box-shadow:4px 4px 0 var(--cyan)}
 .flip.mine{cursor:default}
 .flip.mine .face.front{background:#C9C4D6;color:#3A3546;border-style:dashed;box-shadow:none}
-.yours{position:absolute;left:0;right:0;bottom:0;background:#A9A2BA;border-top:2px dashed #3A3546;font:700 15px var(--sans);text-align:center;padding:7px;color:#1F1A17}
+.yours{display:block;margin:8px -12px -10px;background:#A9A2BA;border-top:2px dashed #3A3546;font:700 14px var(--sans);text-align:center;padding:5px;color:#1F1A17}
 
 /* ---- rezultati ---- */
-.wcard.win{width:min(210px,58%);margin:12px auto 26px;padding:0;font-size:22px;border:3px solid var(--yellow);box-shadow:6px 6px 0 var(--yellow),0 0 28px rgba(255,207,63,.35);transform:rotate(-2deg);display:flex;flex-direction:column;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
-@keyframes pop{from{transform:scale(.7) rotate(4deg);opacity:0}to{transform:rotate(-2deg);opacity:1}}
-.wband{background:var(--yellow);color:var(--onpink);border-bottom:2px solid var(--wtext);padding:8px 10px;font:700 15px/1.25 var(--sans);text-align:center}
-.wtext{padding:16px}
-.wcard.res{display:flex;flex-direction:column;padding:0}
-.wcard.res .wtext{flex:1;padding:12px}
-.rmeta{border-top:2px solid var(--wtext);background:#E6E1F0;font:700 15px var(--sans);text-align:center;padding:8px 6px;color:var(--wtext)}
+.wcard.win{aspect-ratio:auto;margin:8px 4px 14px 0;padding:0;font-size:calc(var(--afs,17px) + 3px);line-height:1.25;border:3px solid var(--yellow);box-shadow:6px 6px 0 var(--yellow),0 0 28px rgba(255,207,63,.35);transform:rotate(-1deg);display:flex;flex-direction:column;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(.8) rotate(3deg);opacity:0}to{transform:rotate(-1deg);opacity:1}}
+.wband{display:flex;justify-content:center;gap:5px;background:var(--yellow);color:var(--onpink);border-bottom:2px solid var(--wtext);padding:6px 10px;font:700 15px/1.25 var(--sans);white-space:nowrap}
+.wtext{padding:10px 14px}
+/* prvi pobjednik: odgovor je već upisan u crnu kartu, pa ovdje samo traka s imenom i glasovima */
+.wcard.win.only .wband{border-bottom:0;padding:9px 12px;font-size:16px}
+.wcard.res{display:flex;flex-direction:column;padding:0;aspect-ratio:auto;min-height:72px;font-size:var(--afs,17px);line-height:1.25}
+.wcard.res .wtext{flex:1;padding:7px 10px}
+.rmeta{display:flex;justify-content:center;gap:4px;border-top:2px solid var(--wtext);background:#E6E1F0;font:700 13px/1.2 var(--sans);padding:3px 6px;color:var(--wtext);white-space:nowrap}
+/* duga imena: rez s … umjesto lomljenja retka */
+.wcard.res .auto{display:block;margin-top:4px;font:500 13px/1.2 var(--sans);color:#6F6784}
+.nm1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sfx{flex:none;white-space:nowrap}
+.wn{display:inline-block;max-width:11em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
 .nowin{text-align:center;font:30px var(--crt);color:var(--muted);margin:16px 0}
 
 /* ---- popisi i ostalo ---- */
@@ -150,7 +169,10 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 .codecard .lbl{font:15px var(--sans);color:var(--muted)}
 .bigcode{font:96px/1 var(--crt);letter-spacing:.2em;margin:4px 0 2px .2em;color:var(--yellow);text-shadow:0 0 8px rgba(255,207,63,.6)}
 .players{display:flex;flex-direction:column;border:2px solid var(--line);border-radius:10px;background:var(--surf);overflow:hidden}
-.prow{display:flex;justify-content:space-between;align-items:center;min-height:50px;padding:8px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:18px}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:50px;padding:8px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:18px}
+.prow .pn{display:flex;align-items:baseline;flex:1;min-width:0}
+.prow .pn .tag{flex:none;white-space:nowrap}
+.prow .pr{flex:none;white-space:nowrap}
 .prow:last-child{border-bottom:0}
 .prow.away{color:var(--muted)}
 .prow .sc{font:30px/1 var(--crt);color:var(--yellow)}
@@ -168,17 +190,29 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 .note{background:var(--surf);border:2px solid var(--line);border-radius:6px;padding:14px;margin:12px 0;color:var(--muted);font-weight:700;font-size:16px;text-align:center}
 .toast{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:var(--warn);color:var(--onpink);border:2px solid var(--onpink);box-shadow:3px 3px 0 var(--cyan);padding:12px 18px;border-radius:6px;font-weight:700;font-size:16px;z-index:90;max-width:90%;text-align:center}
 .modal{position:fixed;inset:0;background:rgba(5,4,10,.75);display:flex;align-items:flex-end;justify-content:center;z-index:85}
-.sheet{background:var(--surf);width:100%;max-width:520px;border:2px solid var(--cyan);border-bottom:0;border-radius:12px 12px 0 0;padding:22px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet{background:var(--surf);width:100%;max-width:520px;max-height:92vh;max-height:92dvh;overflow-y:auto;border:2px solid var(--cyan);border-bottom:0;border-radius:12px 12px 0 0;padding:22px 16px calc(20px + env(safe-area-inset-bottom))}
 .sheet h3{margin:0 0 12px;font:15px/1.5 var(--pixel);color:var(--cyan)}
 .sheet p{font-size:17px;line-height:1.45}
+/* izbornik ☰ */
+.shead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-8px 0 8px}
+.shead h3{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet .xbtn{flex:none;width:48px;height:48px;min-height:48px;margin:0;padding:0;font:700 22px/1 var(--sans);background:transparent;border:2px solid var(--line);box-shadow:none}
+.sheet .mitem{display:flex;align-items:center;justify-content:space-between;min-height:56px;margin:8px 0;padding:0 14px;font:700 18px var(--sans);text-align:left;box-shadow:none}
+.sheet .mitem.nav::after{content:"›";font-size:28px;line-height:1;color:var(--muted)}
+.sheet .mitem:active:not(:disabled){transform:none;border-color:var(--cyan)}
+.sheet .rules h2:first-child{margin-top:4px}
+.sheet .rules li{font-size:16px}
+.sheet .legal{margin-top:16px;text-align:left}
 .footer{color:var(--muted);font-size:15px;text-align:center;margin-top:34px;line-height:1.4}
 .footer a{color:var(--muted)}
 .handmode .footer{display:none}
 .champ{text-align:center;margin:26px 0 10px}
-.champ .nm{font:24px/1.4 var(--pixel);color:var(--yellow);margin-top:10px;text-shadow:0 0 6px currentColor,0 0 18px currentColor}
+.champ .nm{font:24px/1.4 var(--pixel);color:var(--yellow);margin-top:10px;text-shadow:0 0 6px currentColor,0 0 18px currentColor;overflow-wrap:anywhere}
 .champ .pts{font:28px var(--crt);margin-top:8px;color:var(--text)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (min-aspect-ratio:3/4){.splash .bgblur{display:none}.cab{aspect-ratio:2576/1438;width:max(100vw,calc(100vh * 2576 / 1438));width:max(100vw,calc(100dvh * 2576 / 1438));transform-origin:50.1% 42.6%}.cab .scr{left:44.1%;top:34.1%;width:12%;height:17%;font-size:1.33cqw}.cab .mq{left:42.2%;top:19%;width:15.4%;height:6.5%;font-size:1.25cqw}}
+@media (max-height:600px){.peek{height:calc(2 * 23px + 20px);padding:8px 12px;font:700 18px/23px var(--sans)}.peek .ptxt{-webkit-line-clamp:2}.fan{height:140px}.fc{bottom:14px}.handbar{padding-top:8px}.card.black{padding:10px 12px;margin:8px 4px 8px 0}.reader{font-size:20px;margin-top:4px}#vhint{display:none}.grid2{gap:8px;margin-top:6px}.flip,.face,.wcard.res{min-height:56px}.wcard.win{margin:6px 4px 10px 0}}
+.app.tight #vhint{display:none}.app.tight .card.black{padding:10px 12px;margin:8px 4px 8px 0}.app.tight .grid2{gap:6px;margin-top:6px}.app.tight .face.front{padding:6px 8px}.app.tight .wcard.res .wtext{padding:5px 8px}.app.tight .reader{font-size:20px;margin-top:4px}.app.tight .wcard.win{margin:6px 4px 8px 0}
 </style>
 </head>
 <body>
@@ -297,6 +331,7 @@ function glasova(n){ return n === 1 ? "glas" : (n >= 2 && n <= 4 ? "glasa" : "gl
 const LICENCA = `Paket Klasici prema <a href="https://www.cardsagainsthumanity.com/" target="_blank" rel="noopener">Cards Against Humanity</a>, licenca <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank" rel="noopener">CC BY-NC-SA 2.0</a>.`;
 const CROWN = `<svg aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="#FFCF3F" stroke="#FFCF3F" stroke-width="1.4" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px rgba(255,207,63,.7))"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>`;
 const linkK = () => (new URLSearchParams(location.search).get("k") || "").toUpperCase();
+const MENU_ICON = `<svg aria-hidden="true" width="24" height="20" viewBox="0 0 24 20" fill="#F1EEFA"><rect y="0" width="24" height="4"/><rect y="8" width="24" height="4"/><rect y="16" width="24" height="4"/></svg>`;
 
 // ---- Prikaz ----
 function render(){
@@ -318,20 +353,48 @@ function render(){
   if (lifted !== null && !me.hand.some(h => h.id === lifted)) lifted = null;
   const timed = r.ends_at && ["playing","voting","results"].includes(r.phase);
   const s = timed ? secondsLeft() : null;
-  let h = `<div class="topbar ${timed && s !== null && s <= 10 ? "low" : ""}" id="topbar"><span class="tcode">${esc(r.code)}</span>${timed ? `<span class="tnum" id="timer">${fmtT(s)}</span>` : `<span class="tlogo">BEZ FILTERA</span>`}<button class="menubtn" id="menuBtn">IZBORNIK</button>${timed ? `<div class="tstrip"><i id="tfill" style="width:${timerPct(s)}%"></i></div>` : `<div class="tspace"></div>`}</div>`;
+  let h = `<div class="topbar ${timed && s !== null && s <= 10 ? "low" : ""}" id="topbar"><span class="tcode">${esc(r.code)}</span>${timed ? `<span class="tnum" id="timer">${fmtT(s)}</span>` : `<span class="tlogo">BEZ FILTERA</span>`}<button class="menubtn" id="menuBtn" aria-label="Izbornik" aria-haspopup="dialog">${MENU_ICON}</button>${timed ? `<div class="tstrip"><i id="tfill" style="width:${timerPct(s)}%"></i></div>` : `<div class="tspace"></div>`}</div>`;
   const handMode = r.phase === "playing" && !me.waiting && !me.submitted;
+  const fit = !me.waiting && (r.phase === "voting" || r.phase === "results");
   if (r.phase === "lobby") h += lobbyHTML();
   else if (r.phase === "ended") h += endedHTML();
   else if (me.waiting) h += waitingHTML();
   else if (r.phase === "playing") h += playingHTML();
   else if (r.phase === "voting") h += votingHTML();
   else if (r.phase === "results") h += resultsHTML();
-  h += `<div class="footer">${LICENCA}</div>`;
-  app.className = "app" + (handMode ? " handmode" : "");
+  // licenca samo u predvorju i na kraju igre (tijekom igre je u ☰ → Pravila), da ne gura ekrane runde u skrolanje
+  if (r.phase === "lobby" || r.phase === "ended") h += `<div class="footer">${LICENCA}</div>`;
+  app.className = "app" + (handMode ? " handmode" : "") + (fit ? " fit" : "");
   app.innerHTML = h;
   bindGame();
+  fitScreen();
   check18();
 }
+
+// Ekrani runde moraju stati bez skrolanja. Visina ovisi o tekstu karata, pa se po potrebi korak po korak
+// smanjuje tekst: prvo odgovori (17→14 px), zatim crna karta (20→17), pa odgovori do 12 i crna do 16.
+// Ako ni tada ne stane (jako mali ekran), stranica se iznimno skrola, ali se ništa ne preklapa.
+function fitScreen(){
+  const app = $("#app"); if (!app || !S) return;
+  app.style.removeProperty("--afs"); app.style.removeProperty("--bfs"); app.style.paddingBottom = ""; app.classList.remove("tight");
+  const hand = app.classList.contains("handmode"), fit = app.classList.contains("fit");
+  if (!hand && !fit) return;
+  if (hand) {                                     // u ruci crna karta najviše 4 reda (20 px, po potrebi do 16 px)
+    const bt = app.querySelector(".card.black .bt"); if (!bt) return;
+    for (let f = 20; f >= 16; f--) { app.style.setProperty("--bfs", f + "px"); if (bt.offsetHeight <= f * 1.3 * 4 + 6) break; }
+    return;
+  }
+  const btn = app.querySelector(".bar button");     // zalijepljeni gumb nikad ne prekriva zadnji red karata
+  if (btn) app.style.paddingBottom = Math.ceil(window.innerHeight - btn.getBoundingClientRect().top + 8) + "px";
+  app.classList.add("measure");
+  const over = () => document.documentElement.scrollHeight > window.innerHeight + 1;
+  const steps = [["--afs",16],["--afs",15],["--afs",14],["--bfs",19],["--bfs",18],["--bfs",17],["--afs",13],["--afs",12],["--bfs",16]];
+  for (const [k, v] of steps) { if (!over()) break; app.style.setProperty(k, v + "px"); }
+  if (over()) app.classList.add("tight");          // zadnji korak: manji razmaci, bez retka s uputom
+  app.classList.remove("measure");
+}
+window.addEventListener("resize", fitScreen);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitScreen);
 function go(v){ view = v; lastKey = ""; render(); }
 
 // ---- Ulazni ekran ----
@@ -388,9 +451,8 @@ function bindMenu(){
 }
 
 // ---- Pravila ----
-function rulesHTML(){
-  return `<div class="rules"><h1 class="glow">PRAVILA</h1>
-  <h2>KAKO SE IGRA</h2>
+// Tekst pravila na jednom mjestu: koriste ga stranica Pravila i ☰ → Pravila u igri.
+const RULES_HTML = `<h2>KAKO SE IGRA</h2>
   <ol>
     <li>Igra se u društvu, od <b>3 do 20 igrača</b>, svatko na svom mobitelu.</li>
     <li>Jedan igrač napravi sobu i dobije <b>kod od 4 slova</b>. Ostali uđu s tim kodom ili preko poveznice.</li>
@@ -407,7 +469,10 @@ function rulesHTML(){
     <li><b>Pristojno</b>: uvijek uključen. Svakodnevica, hrvatski kvartovi, fakulteti, posao, more, sport, politika bez imena.</li>
     <li><b>18+</b>: vulgarno i neugodno. Uključuje host.</li>
     <li><b>Klasici</b>: hrvatske verzije poznatih karata, prema Cards Against Humanity (licenca CC BY-NC-SA).</li>
-  </ul>
+  </ul>`;
+function rulesHTML(){
+  return `<div class="rules"><h1 class="glow">PRAVILA</h1>
+  ${RULES_HTML}
   <button class="crtbtn" id="backBtn" style="margin-top:20px">&gt; NAZAD<span class="cursor">_</span></button></div>`;
 }
 
@@ -457,7 +522,7 @@ async function leaveRoom(){
 }
 
 function playersHTML(showDone){
-  return `<div class="players">${S.players.map(p => `<div class="prow ${p.present ? "" : "away"}"><span>${esc(p.name)}${p.host ? '<span class="tag">host</span>' : ""}${p.waiting ? '<span class="tag">od sljedeće runde</span>' : ""}${!p.present ? '<span class="tag">nije tu</span>' : ""}</span><span>${showDone && p.done ? '<span class="ok">✓</span> ' : ""}<span class="sc">${esc(p.score)}</span></span></div>`).join("")}</div>`;
+  return `<div class="players">${S.players.map(p => `<div class="prow ${p.present ? "" : "away"}"><span class="pn"><span class="nm1">${esc(p.name)}</span>${p.host ? '<span class="tag">host</span>' : ""}${p.waiting ? '<span class="tag">od sljedeće runde</span>' : ""}${!p.present ? '<span class="tag">nije tu</span>' : ""}</span><span class="pr">${showDone && p.done ? '<span class="ok">✓</span> ' : ""}<span class="sc">${esc(p.score)}</span></span></div>`).join("")}</div>`;
 }
 
 function wakeToggleHTML(){
@@ -488,25 +553,24 @@ function fanHTML(){
     return `<div class="fc ${c.id === lifted ? "up" : ""} ${si >= 0 ? "sel" : ""} ${c.custom ? "custom" : ""}" data-i="${i}" style="--x:${x};--r:${(d * 4).toFixed(1)}deg;--y:${(d * d * 2).toFixed(1)}px;z-index:${c.id === lifted ? 50 : i}">${si >= 0 && need > 1 ? `<span class="ord">${si + 1}.</span> ` : ""}${esc(c.text)}</div>`;
   }).join("");
 }
-function stageHTML(){
+// Traka iznad lepeze: cijeli tekst podignute karte. Dodir na traku radi isto što i drugi dodir na kartu.
+function peekHTML(){
   const need = S.room.pick, c = lifted === null ? null : S.me.hand.find(h => h.id === lifted);
-  if (!c) return `<div class="hintpill">Dodirni ili povuci prstom preko karata</div>`;
+  if (!c) return `<div class="peek empty" id="peek">Prijeđi prstom preko karata</div>`;
   const i = sel.indexOf(c.id);
-  const hint = i >= 0 ? (need > 1 ? `Odabrana kao ${i + 1}. Dodirni za poništavanje.` : "Odabrano. Dodirni za poništavanje.")
-    : (need > 1 && sel.length >= need ? `Već imaš ${need} karte. Poništi jednu.` : "Dodirni kartu za odabir");
-  return `<div class="hintpill">${hint}</div><button class="wcard big ${i >= 0 ? "sel" : ""} ${c.custom ? "custom" : ""}" id="liftBig">${i >= 0 && need > 1 ? `<span class="ord">${i + 1}.</span> ` : ""}${esc(c.text)}</button>`;
+  const tag = i >= 0 ? "Odabrano ✓" : (need > 1 && sel.length >= need ? `Već imaš ${need}. Poništi jednu.` : "Dodirni još jednom za odabir");
+  return `<button class="peek ${i >= 0 ? "sel" : ""} ${c.custom ? "custom" : ""}" id="peek" aria-pressed="${i >= 0}"><span class="ptag ${i >= 0 ? "on" : ""}">${tag}</span><span class="ptxt">${i >= 0 && need > 1 ? `<span class="ord">${i + 1}.</span> ` : ""}${esc(c.text)}</span></button>`;
 }
 function playingHTML(){
   const r = S.room, me = S.me;
   if (me.submitted) {
-    const left = S.players.filter(p => !p.done && !p.waiting && p.present).map(p => esc(p.name));
-    return `<div class="card black"><div>${blackHTML(r.black)}</div></div><div class="note">Bacio si ✓ ${left.length ? "Čekamo: " + left.join(", ") : ""}</div>${playersHTML(true)}${addHTML()}`;
+    const left = S.players.filter(p => !p.done && !p.waiting && p.present).map(p => `<span class="wn">${esc(p.name)}</span>`);
+    return `<div class="card black"><div class="bt">${blackHTML(r.black)}</div></div><div class="note">Bacio si ✓ ${left.length ? "Čekamo: " + left.join(", ") : ""}</div>${playersHTML(true)}`;
   }
   const need = r.pick;
-  return `<div class="card black"><div>${blackHTML(r.black)}</div>${need > 1 ? `<div><span class="pick2">IZVUCI ${need}</span></div>` : ""}</div>
-  ${addHTML()}
+  return `<div class="card black"><div class="bt">${blackHTML(r.black)}</div>${need > 1 ? `<span class="pick2">IZVUCI ${need}</span>` : ""}</div>
   <div class="handbar"><div class="inner">
-    <div class="stage" id="stage">${stageHTML()}</div>
+    <div id="peekwrap" aria-live="polite">${peekHTML()}</div>
     <div class="fan" id="fan" role="listbox" aria-label="Tvoje karte">${fanHTML()}</div>
     <button class="primary" id="playBtn" ${sel.length !== need ? "disabled" : ""}>${sel.length === need ? "Baci" : need > 1 ? `Odaberi ${need} (${sel.length}/${need})` : "Odaberi kartu"}</button>
   </div></div>`;
@@ -521,9 +585,9 @@ function toggleSel(id){
 function setLift(id){
   lifted = id;
   document.querySelectorAll("#fan .fc").forEach((el, i) => { const up = S.me.hand[i] && S.me.hand[i].id === id; el.classList.toggle("up", up); el.style.zIndex = up ? 50 : i; });
-  const st = $("#stage"); if (st) { st.innerHTML = stageHTML(); bindStage(); }
+  const w = $("#peekwrap"); if (w) { w.innerHTML = peekHTML(); bindPeek(); }
 }
-function bindStage(){ const b = $("#liftBig"); b && (b.onclick = () => lifted !== null && toggleSel(lifted)); }
+function bindPeek(){ const b = $("button#peek"); b && (b.onclick = () => lifted !== null && toggleSel(lifted)); }
 function bindFan(){
   const fan = $("#fan"); if (!fan) return;
   const hand = S.me.hand, W = 76, PAD = 16;
@@ -532,7 +596,7 @@ function bindFan(){
   fan.onpointermove = e => { if (!drag) return; const c = hand[idxAt(e)]; if (c.id !== lifted) { drag.moved = true; setLift(c.id); } };
   fan.onpointerup = () => { if (!drag) return; const d = drag; drag = null; if (!d.moved && d.was) toggleSel(lifted); };
   fan.onpointercancel = () => { drag = null; };
-  bindStage();
+  bindPeek();
 }
 
 // ---- Glasanje (okretanje karata) ----
@@ -549,12 +613,12 @@ function votingHTML(){
   flipSync();
   const r = S.room, voted = S.me.voted_for, v = voteState();
   return `<div class="reader">NAGLAS ČITA: <b>${esc(readerName())}</b></div>
-  <div class="card black"><div>${blackHTML(r.black)}</div></div>
-  <p class="muted" id="vhint" style="margin:0;font-size:16px;font-weight:700;text-align:center">${voteHint(v)}</p>
+  <div class="card black"><div class="bt">${blackHTML(r.black)}</div></div>
+  <p class="muted" id="vhint" style="margin:0;font-size:15px;font-weight:700;text-align:center">${voteHint(v)}</p>
   <div class="grid2">${S.submissions.map(s => { const id = String(s.id), t = s.texts.map(esc).join(" / "), raw = s.texts.join(" / "), on = (voteSel === id || (voted !== null && voted !== undefined && String(voted) === id));
-    return `<div class="flip ${isUp(s) ? "up" : ""} ${s.mine ? "mine" : ""} ${on ? "sel" : ""} ${raw.length > 80 ? "wide" : ""}" data-flip="${esc(id)}" role="button" aria-label="${isUp(s) ? "Odgovor" : "Okreni kartu"}">
+    return `<div class="flip ${isUp(s) ? "up" : ""} ${s.mine ? "mine" : ""} ${on ? "sel" : ""} " data-flip="${esc(id)}" role="button" aria-label="${isUp(s) ? "Odgovor" : "Okreni kartu"}">
       <div class="fi"><div class="face back"><span class="blogo"><span>BEZ</span><span>FILTERA</span></span></div>
-      <div class="face front">${t}${s.mine ? '<span class="yours">tvoja</span>' : ""}</div></div></div>`; }).join("")}</div>
+      <div class="face front"><span class="at">${t}</span>${s.mine ? '<span class="yours">tvoja</span>' : ""}</div></div></div>`; }).join("")}</div>
   ${voted ? "" : `<div class="bar"><div class="inner"><button class="primary" id="voteBtn" ${voteSel && v.all ? "" : "disabled"}>${voteBtnText(v)}</button></div></div>`}`;
 }
 function bindFlips(){
@@ -577,14 +641,14 @@ function resultsHTML(){
   const r = S.room;
   const subs = [...S.submissions].sort((a, b) => b.votes - a.votes);
   const win = subs.filter(s => s.winner), rest = subs.filter(s => !s.winner);
-  return `<div class="card black"><div>${blackHTML(r.black, win[0] ? win[0].texts : null)}</div></div>
-  ${win.length ? win.map(w => `<div class="card wcard win"><div class="wband">Pobjednik · ${esc(w.player)} · ${esc(w.votes)} ${glasova(w.votes)}</div><div class="wtext">${w.texts.map(esc).join(" / ")}</div></div>`).join("") : `<div class="nowin">NITKO NIJE DOBIO GLAS</div>`}
-  ${rest.length ? `<div class="grid2">${rest.map(s => `<div class="card wcard res ${s.texts.join(" / ").length > 80 ? "wide" : ""}"><div class="wtext">${s.texts.map(esc).join(" / ")}</div><div class="rmeta">${esc(s.player)}${s.auto ? " (bacio sustav)" : ""} · ${esc(s.votes)} ${glasova(s.votes)}</div></div>`).join("")}</div>` : ""}
-  <h2>BODOVI</h2>${playersHTML(false)}`;
+  // Ljestvica više nije ispod rezultata (ne može stati sa 6 odgovora): ☰ → Bodovi.
+  return `<div class="card black"><div class="bt">${blackHTML(r.black, win[0] ? win[0].texts : null)}</div></div>
+  ${win.length ? win.map((w, i) => `<div class="card wcard win ${i === 0 ? "only" : ""}"><div class="wband"><span class="nm1">Pobjednik · ${esc(w.player)}</span><span class="sfx">· ${esc(w.votes)} ${glasova(w.votes)}</span></div>${i === 0 ? "" : `<div class="wtext">${w.texts.map(esc).join(" / ")}</div>`}</div>`).join("") : `<div class="nowin">NITKO NIJE DOBIO GLAS</div>`}
+  ${rest.length ? `<div class="grid2">${rest.map(s => `<div class="card wcard res "><div class="wtext">${s.texts.map(esc).join(" / ")}${s.auto ? `<span class="auto">bacio sustav</span>` : ""}</div><div class="rmeta"><span class="nm1">${esc(s.player)}</span><span class="sfx">· ${esc(s.votes)} ${glasova(s.votes)}</span></div></div>`).join("")}</div>` : ""}`;
 }
 
 function waitingHTML(){
-  return `<div class="card black"><div>${blackHTML(S.room.black || "Igra je u tijeku.")}</div></div><div class="note">Ušao si usred runde. Uključuješ se od sljedeće, karte već imaš.</div>${playersHTML(false)}${addHTML()}`;
+  return `<div class="card black"><div class="bt">${blackHTML(S.room.black || "Igra je u tijeku.")}</div></div><div class="note">Ušao si usred runde. Uključuješ se od sljedeće, karte već imaš.</div>${playersHTML(false)}`;
 }
 
 function endedHTML(){
@@ -595,7 +659,6 @@ function endedHTML(){
   ${S.me.is_host ? `<div class="bar"><div class="inner"><button class="primary" id="startBtn">Nova igra</button></div></div>` : `<div class="note">Host može pokrenuti novu igru.</div>`}`;
 }
 
-function addHTML(){ return S.me.can_add ? `<button class="secondary" id="addBtn" style="margin-top:14px">Dodaj svoj odgovor</button>` : ""; }
 
 function set18(){
   const b = id => document.getElementById(id);
@@ -641,15 +704,28 @@ function openAdd(){
 }
 function toast2(m){ const d=document.createElement("div"); d.className="toast"; d.style.background="var(--good)"; d.style.color="#000"; d.textContent=m; document.body.appendChild(d); setTimeout(()=>d.remove(),2500); }
 
-function openMenu(){
+// ☰ izbornik. Igra teče u pozadini; render() crta samo #app, a prozor je u #overlay pa ostaje otvoren.
+function openMenu(){ menuView("main"); }
+function menuHead(title){ return `<div class="shead"><h3>${title}</h3><button class="xbtn" id="xBtn" aria-label="Zatvori">✕</button></div>`; }
+function menuView(v){
+  if (!S) { closeSheet(); return; }
+  const back = `<button class="secondary" id="backM">Natrag</button>`;
+  const bindSub = () => { $("#xBtn").onclick = closeSheet; $("#backM").onclick = () => menuView("main"); };
+  if (v === "score") { sheet(`${menuHead("BODOVI")}${playersHTML(false)}${back}`, bindSub); return; }
+  if (v === "rules") { sheet(`${menuHead("PRAVILA")}<div class="rules">${RULES_HTML}</div><p class="legal">${LICENCA}</p>${back}`, bindSub); return; }
   const host = S.me.is_host, inGame = ["playing","voting","results"].includes(S.room.phase);
-  sheet(`<h3>${esc(S.me.name)} · ${esc(S.room.code)}</h3>
+  sheet(`${menuHead(`${esc(S.me.name)} · ${esc(S.room.code)}`)}
+  <button class="secondary mitem nav" id="mScore">Bodovi</button>
+  ${S.me.can_add ? `<button class="secondary mitem nav" id="mAdd">Dodaj svoj odgovor</button>` : ""}
+  <button class="secondary mitem nav" id="mRulesG">Pravila</button>
   <label class="toggle">Ekran uvijek upaljen <input type="checkbox" class="sw" id="wakeT" role="switch" ${wakeOn ? "checked" : ""}></label>
-  ${host && inGame ? `<button class="secondary" id="endBtn">Završi igru</button>` : ""}
-  <button class="danger" id="leaveBtn">Izađi iz sobe</button>
-  <button class="secondary" id="closeBtn">Zatvori</button>`, () => {
+  ${host && inGame ? `<button class="secondary mitem" id="endBtn">Završi igru</button>` : ""}
+  <button class="danger mitem" id="leaveBtn">Izađi iz sobe</button>`, () => {
+    $("#xBtn").onclick = closeSheet;
+    $("#mScore").onclick = () => menuView("score");
+    $("#mAdd") && ($("#mAdd").onclick = openAdd);
+    $("#mRulesG").onclick = () => menuView("rules");
     $("#wakeT").onchange = toggleWake;
-    $("#closeBtn").onclick = closeSheet;
     $("#endBtn") && ($("#endBtn").onclick = () => sheet(`<h3>ZAVRŠITI IGRU?</h3><p class="muted">Svima se prikazuje konačni poredak.</p><button class="primary" id="y">Da, završi</button><button class="secondary" id="n">Ne</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = () => { closeSheet(); act("end_game", { p_token: token }); }; }));
     $("#leaveBtn").onclick = () => sheet(`<h3>IZAĆI IZ SOBE?</h3><p class="muted">Bodovi ti se gube. Možeš ući ponovno s kodom.</p><button class="danger" id="y">Izađi</button><button class="secondary" id="n">Ostani</button>`, () => { $("#n").onclick = closeSheet; $("#y").onclick = () => { closeSheet(); leaveRoom(); }; });
   });
