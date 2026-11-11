@@ -206,7 +206,7 @@ let wakeOn = ls.get("bf_wake") !== "0", wakeLock = null;
 let lifted = null, drag = null;                 // podignuta karta u lepezi
 let flip = { k: "", ids: new Set() };           // okrenute karte u glasanju, po rundi
 let tot = { k: "", v: 0 };                      // ukupno trajanje faze za traku timera
-const DUR = { playing: 90, voting: 45 };
+const DUR = { playing: 60, voting: 30 };
 // Ekrani izvan sobe: "splash" (ulaz), "menu" (CRT izbornik), "rules" (pravila), "home" (upis imena i koda)
 let view = "splash";
 let bootWait = !!token;                          // ima token: čekaj get_state, da povratak u sobu ne ide kroz ulaz
@@ -396,8 +396,8 @@ function rulesHTML(){
     <li>Jedan igrač napravi sobu i dobije <b>kod od 4 slova</b>. Ostali uđu s tim kodom ili preko poveznice.</li>
     <li>Svatko dobije <b>7 bijelih karata</b> (odgovori).</li>
     <li>Svaka runda otvara <b>crnu kartu</b>, pitanje s prazninom.</li>
-    <li>Imaš <b>90 sekundi</b> da baciš bijelu kartu koja najbolje (ili najgore) popunjava prazninu. Kad piše <b>"Izvuci 2"</b>, baciš dvije, redom. Ako ne stigneš, sustav baci nasumičnu kartu umjesto tebe.</li>
-    <li>Svi odgovori se pokažu <b>anonimno</b>. Jedan igrač ih čita naglas, a svi imaju <b>45 sekundi</b> da glasaju za najbolji. <b>Za svoj ne možeš.</b></li>
+    <li>Imaš <b>60 sekundi</b> da baciš bijelu kartu koja najbolje (ili najgore) popunjava prazninu. Kad piše <b>"Izvuci 2"</b>, baciš dvije, redom. Ako ne stigneš, sustav baci nasumičnu kartu umjesto tebe.</li>
+    <li>Svi odgovori se pokažu <b>anonimno</b>. Jedan igrač ih čita naglas, a svi imaju <b>30 sekundi</b> da glasaju za najbolji. <b>Za svoj ne možeš.</b></li>
     <li>Pobjednik runde dobije <b>1 bod</b>. Kod neriješenog svi s najviše glasova dobiju bod.</li>
     <li>Jednom po igri možeš <b>dodati svoj odgovor</b>. Dobit će ga netko drugi i nitko neće znati da je tvoj.</li>
     <li>Igra traje dok host ne klikne <b>Završi igru</b>. Može se ući i usred igre.</li>
