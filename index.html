@@ -84,6 +84,8 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 /* visina: 48 (red) + 6 (traka timera) + 2 (obrub) = 56 px */
 .topbar{position:sticky;top:0;z-index:30;margin:calc(-1 * env(safe-area-inset-top)) -14px 0;padding:env(safe-area-inset-top) 14px 0;background:var(--surf);border-bottom:2px solid var(--cyan);display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:48px auto;align-items:center;gap:0 8px;transition:background .2s,border-color .2s}
 .tcode{font:30px/1 var(--crt);color:var(--cyan);letter-spacing:.12em}
+.tround{font:30px/1 var(--crt);color:var(--cyan);display:flex;flex-direction:column;gap:2px}
+.tround small{font:700 11px/1 var(--sans);letter-spacing:.12em;color:var(--muted)}
 .tnum{font:44px/1 var(--crt);text-align:center;min-width:76px;color:var(--yellow)}
 .tlogo{font:26px/1 var(--crt);color:var(--pink);text-align:center;letter-spacing:.06em}
 .menubtn{justify-self:end;width:48px;min-height:48px;height:48px;margin:0;padding:0;display:grid;place-items:center;font:30px/1 var(--crt);background:transparent;color:var(--text);border:2px solid var(--line);box-shadow:none}
@@ -219,6 +221,7 @@ button:disabled{background:var(--off);border-color:var(--off);color:var(--offtex
 <div class="app" id="app"></div>
 <div id="overlay"></div>
 <script>
+const MAX_ROUNDS = 5;                            // mora odgovarati rooms.max_rounds u bazi
 const SUPABASE_URL = "https://gxjziipwrxzjibzlakgq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_4eocLcYh6eKvRrGqTChA1Q_aw6XztH_";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -353,7 +356,7 @@ function render(){
   if (lifted !== null && !me.hand.some(h => h.id === lifted)) lifted = null;
   const timed = r.ends_at && ["playing","voting","results"].includes(r.phase);
   const s = timed ? secondsLeft() : null;
-  let h = `<div class="topbar ${timed && s !== null && s <= 10 ? "low" : ""}" id="topbar"><span class="tcode">${esc(r.code)}</span>${timed ? `<span class="tnum" id="timer">${fmtT(s)}</span>` : `<span class="tlogo">BEZ FILTERA</span>`}<button class="menubtn" id="menuBtn" aria-label="Izbornik" aria-haspopup="dialog">${MENU_ICON}</button>${timed ? `<div class="tstrip"><i id="tfill" style="width:${timerPct(s)}%"></i></div>` : `<div class="tspace"></div>`}</div>`;
+  let h = `<div class="topbar ${timed && s !== null && s <= 10 ? "low" : ""}" id="topbar">${timed ? `<span class="tround"><small>RUNDA</small>${esc(r.round)}/${MAX_ROUNDS}</span>` : `<span class="tcode">${esc(r.code)}</span>`}${timed ? `<span class="tnum" id="timer">${fmtT(s)}</span>` : `<span class="tlogo">BEZ FILTERA</span>`}<button class="menubtn" id="menuBtn" aria-label="Izbornik" aria-haspopup="dialog">${MENU_ICON}</button>${timed ? `<div class="tstrip"><i id="tfill" style="width:${timerPct(s)}%"></i></div>` : `<div class="tspace"></div>`}</div>`;
   const handMode = r.phase === "playing" && !me.waiting && !me.submitted;
   const fit = !me.waiting && (r.phase === "voting" || r.phase === "results");
   if (r.phase === "lobby") h += lobbyHTML();
@@ -462,7 +465,7 @@ const RULES_HTML = `<h2>KAKO SE IGRA</h2>
     <li>Svi odgovori se pokažu <b>anonimno</b>. Jedan igrač ih čita naglas, a svi imaju <b>30 sekundi</b> da glasaju za najbolji. <b>Za svoj ne možeš.</b></li>
     <li>Pobjednik runde dobije <b>1 bod</b>. Kod neriješenog svi s najviše glasova dobiju bod.</li>
     <li>Jednom po igri možeš <b>dodati svoj odgovor</b>. Dobit će ga netko drugi i nitko neće znati da je tvoj.</li>
-    <li>Igra traje dok host ne klikne <b>Završi igru</b>. Može se ući i usred igre.</li>
+    <li>Igra traje <b>5 rundi</b>. Tko na kraju ima najviše bodova, pobjeđuje. Kod jednakih bodova pobjedu dijele. Host može i ranije kliknuti <b>Završi igru</b>. Može se ući i usred igre.</li>
   </ol>
   <h2>PAKETI</h2>
   <ul>
