@@ -236,6 +236,7 @@ const ERR = {
 };
 const ls = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}, del(k){try{localStorage.removeItem(k)}catch(e){}} };
 
+let handOrder = [];
 let token = ls.get("bf_token"), S = null, offset = 0, sel = [], voteSel = null, channel = null, channelCode = null, busy = false, lastKey = "";
 // Ekran uvijek upaljen je uključen po defaultu (isključen samo ako ga je igrač sam ugasio).
 let wakeOn = ls.get("bf_wake") !== "0", wakeLock = null;
@@ -286,6 +287,10 @@ async function refresh(){
     const prev = S; S = d;
     if (!prev || prev.room.round !== S.room.round || prev.room.phase !== S.room.phase) { sel = []; voteSel = null; }
     sel = sel.filter(id => S.me.hand.some(h => h.id === id));
+    // stalni redoslijed ruke: karte koje već imaš ostaju na istom mjestu, nova karta ide na kraj
+    const pos = new Map(handOrder.map((id, i) => [id, i]));
+    S.me.hand.sort((x, y) => (pos.has(x.id) ? pos.get(x.id) : 1e9 + x.id) - (pos.has(y.id) ? pos.get(y.id) : 1e9 + y.id));
+    handOrder = S.me.hand.map(h => h.id);
     ensureChannel(S.room.code);
     render();
   } catch(e){ /* mreža: probaj opet za 2 s */ }
